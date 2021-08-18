@@ -8,7 +8,9 @@ import { Component } from 'react';
 import ProForm, {
     ProFormSelect,
   } from '@ant-design/pro-form';
-
+  import kafkaIcon from './images/kafka.png';
+  import jdbsIcon from './images/jdbc.png';
+  import BaseNode from '../EditorGraph/node';
 class EditorPanel extends Component {
 
     constructor(props) {
@@ -21,22 +23,32 @@ class EditorPanel extends Component {
 
         this.canvas = window.canvas;
 
+        console.log(panelPluginsInstance);
+
+        // panelPluginsInstance.PanelNode = BaseNode;
+
         panelPluginsInstance.register(
         [
             {
             root: document.getElementById('dnd'),
             canvas: this.canvas,
-            type: 'basic',
-            width: 40,
-            height: 40,
+            // type: 'basic',
+            height: 90,
             data: [
                 {
-                  id: 'user-baidu-1',
+                  id: 'kafka',
                   type: 'png',
-                  content: 'https://www.baidu.com/img/PCtm_d9c8750bed0b3c7d089fa7d55720d6cf.png',
-                  with: 10,
-                  height: 40,
-                }
+                  content: kafkaIcon,
+                  height: 90,
+                  width: "100%"
+                },
+                {
+                    id: 'jdbc',
+                    type: 'png',
+                    content: jdbsIcon,
+                    height: 90,
+                    width: "100%"
+                  }
               ]
             },
         ],() => {

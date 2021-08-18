@@ -83,13 +83,11 @@ class EditorGraph extends Component {
   render() {
     return (
       <div className='litegraph-page'>
-
-        {/* 弹出 */}
-        <div id="ParamsFrom">
-          <ParamsFrom />
-          </div>
-
         <div className='litegraph-canvas' id='dag-canvas'></div>
+                {/* 弹出 */}
+          <div id="ParamsFrom">
+            <ParamsFrom />
+          </div>
       </div>
     );
   }
