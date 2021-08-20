@@ -60,22 +60,22 @@ class EditorGraph extends Component {
 
 
     
-    HotKeyPlugin.register({
-      canvas: this.canvas,
-      root:document,
-      config:[{
-        key: "ctrl+M",
-        handler: () => {
-          console.log("ctrl+M");
-        }
-      },
-      {
-        key: 'A',
-        handler: () => {
-          console.log("A");
-        }
-      }]
-    })
+    // HotKeyPlugin.register({
+    //   canvas: this.canvas,
+    //   root:document,
+    //   config:[{
+    //     key: "ctrl+M",
+    //     handler: () => {
+    //       console.log("ctrl+M");
+    //     }
+    //   },
+    //   {
+    //     key: 'A',
+    //     handler: () => {
+    //       console.log("A");
+    //     }
+    //   }]
+    // })
     window.canvas = this.canvas;
     window.canvas.emit('unfocus', () => {console.log(1)})
   }

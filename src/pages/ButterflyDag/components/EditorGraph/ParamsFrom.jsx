@@ -12,33 +12,36 @@ class ParamsFrom extends Component {
     super(props);
 
     this.state = {
-      data: {
-
-      }
+      data: {},
+      pluginName: {},
+      pluginOptions: []
     }
 
   }
 
   componentDidMount() {
 
-    
-    
+
+
   }
 
   handleUpdate = () => {
 
+
     this.setState({
-      data: window.selectNode.options.Data
+      data: window.selectNode.options.Data,
+      pluginName: window.selectNode.options.pluginName,
+      pluginOptions: window.selectNode.options.pluginOptions
     });
-    console.log("window.selectNode: ", window.selectNode.options.Data);
-    console.log( window.selectNode.options.Data);
+    console.log("window.selectNode: ", window.selectNode);
+    console.log(window.selectNode.options.Data);
   }
 
 
   render() {
     return (
       <DrawerForm
-        title= { this.state.data.plugin_name }
+        title={this.state.data.plugin_name}
         trigger={
           <div onClick={this.handleUpdate}>
             <PlusOutlined />
@@ -57,14 +60,26 @@ class ParamsFrom extends Component {
         }}
         width='20%'
       >
-        <ProForm.Group>
-          <ProFormText width="md" name="contract" label="source_table_name" id="source_table_name" placeholder="source_table_name" initialValue={ this.state.data.result_table_name } />
-          <ProFormText width="md" name="contract" label="result_table_name" id="result_table_name"  placeholder="result_table_name" />
-        </ProForm.Group>
+
+        {
+          this.state.pluginOptions.map((item, idx) => {
+            return <ProFormText 
+              key={idx} 
+              name={item.name} 
+              label={item.text} 
+              placeholder={item.paramsDesc} 
+              initialValues={item.defaultValue} 
+            />
+          })
+        }
+
+        {/* <ProFormText width="md" name="contract" label="source_table_name" id="source_table_name" placeholder="source_table_name" initialValue={ this.state.data.result_table_name } />
+
+        <ProFormText width="md" name="contract" label="result_table_name" id="result_table_name"  placeholder="result_table_name" />
         
         <ProFormText width='md' name="id" label="主合同编号" />
         <ProFormText name="project" disabled label="项目名称" initialValue="xxxx项目" />
-        <ProFormText width="md" name="mangerName" disabled label="商务经理" initialValue="启途" />
+        <ProFormText width="md" name="mangerName" disabled label="商务经理" initialValue="启途" /> */}
       </DrawerForm>
     );
   }

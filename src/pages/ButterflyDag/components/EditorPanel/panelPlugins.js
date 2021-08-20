@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import $ from 'jquery';
 
-import Node from './node/panel-node.js';
+import BaseNode from '../EditorGraph/node';
 
 import './index.less';
 
@@ -13,10 +13,6 @@ class panelPlugins {
     this.userImgData = [];
     // 绑定过的canvas，用于防止重复绑定
     this.addCanvas = [];
-    // 内置主题
-    this.systemData = [
-      // ...uml,
-    ];
   }
 
   guid = () => {
@@ -45,23 +41,6 @@ class panelPlugins {
         console.warn('register数据canvas字段不存在=>',registerData);
         break;
       }
-      if (registerData.type) {
-        switch (registerData.type) {
-          case 'uml' :
-
-            console.warn('暂不支持type uml=>',registerData);
-            break;
-          case 'basic' :
-            for (let item of registerData.data) {
-              item.width = registerData.width || 36;
-              item.height = registerData.height || 36;
-              this.imgData.push(item);
-            }
-            break;
-          default :
-            console.warn('register数据type值不存在与我们的内置库中=>',registerData);
-        }
-      }
 
       if (registerData.data) {
         for (let item of registerData.data) {
@@ -84,6 +63,12 @@ class panelPlugins {
         jqImg.on('dragstart', (e)=>{
           e.originalEvent.dataTransfer.setData('id', item.id + '-' + this.guid());
           e.originalEvent.dataTransfer.setData('originId', item.id);
+          e.originalEvent.dataTransfer.setData('data', JSON.stringify(item.Data));
+          e.originalEvent.dataTransfer.setData('pluginType', item['pluginType']);
+          e.originalEvent.dataTransfer.setData('pluginName', item['pluginName']);
+          e.originalEvent.dataTransfer.setData('pluginOptions', JSON.stringify(item['pluginOptions']));
+
+          e.originalEvent.dataTransfer.setData('endpoints', JSON.stringify(item['endpoints']));
           e.originalEvent.dataTransfer.setDragImage(img,0,0);
         })
 
@@ -103,13 +88,27 @@ class panelPlugins {
           let coordinates = registerData.canvas.terminal2canvas([clientX, clientY]);
           let id = e.originalEvent.dataTransfer.getData('id');
           let content = e.originalEvent.dataTransfer.getData('originId');
-  
+          let data = JSON.parse(e.originalEvent.dataTransfer.getData('data'));
+
+          let text = data.name || data["plugin_name"];
+
+          let endpoints = JSON.parse(e.originalEvent.dataTransfer.getData('endpoints'));
+          let PluginType = e.originalEvent.dataTransfer.getData('PluginType');
+          let pluginName = e.originalEvent.dataTransfer.getData('pluginName');
+          let pluginOptions = e.originalEvent.dataTransfer.getData('pluginOptions');
+
           let node = {
             id,
             left: coordinates[0],
             top: coordinates[1],
-            Class: Node,
+            Class: BaseNode,
+            pluginName: pluginName,
+            pluginOptions: pluginOptions,
+            Data: data,
+            PluginType: PluginType,
+            endpoints: endpoints,
             content,
+            text: text
           }
   
           this.addNode(registerData.canvas, node);
@@ -130,7 +129,7 @@ class panelPlugins {
 }
 
 let panelPluginsInstance = new panelPlugins();
-panelPluginsInstance.PanelNode = Node;
+panelPluginsInstance.PanelNode = BaseNode;
 
 console.log(panelPluginsInstance);
 

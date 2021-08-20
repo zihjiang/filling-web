@@ -1,16 +1,11 @@
 
 import {Node} from 'butterfly-dag';
 import $ from 'jquery';
-
-import ParamsFrom  from './ParamsFrom';
-
 class BaseNode extends Node {
   constructor(opts) {
     super(opts);
     this.titleBox = null;
     this.state = {
-      data: 2,
-      data1: 1
     }
 
   }
@@ -50,54 +45,33 @@ class BaseNode extends Node {
 
   
   draw = (data) => {
+    console.log('draw', data);
+    console.log('draw this', this.options);
     let container = $('<div class= "test-base-node"></div>')
       .css('top', data.top)
       .css('left', data.left)
       .css('width', data.options.width)
-      .css('height', data.options.height)
-    switch (this.options.id) {
-      case 'gamepad' :
-        this.greenDom_1 = ($('<div class="custom-green-rectangle-point game-point_1"></div>'));
-        this.grayDom_2 = ($('<div class="custom-gray-point game-point_2"></div>'));
-        this.grayDom_3 = $('<div class="custom-gray-point game-point_3"></div>');
+      .css('height', 90);
+    switch (this.options.PluginType) {
+      case 'source' :
+        this.logEventDom = $('<div class="butterflie-circle-endpoint system-green-point"></div>');
         break;
-      case 'logEvent':
-        this.logEventDom = $('<div class="custom-green-rectangle-point log-event-point_1"></div>');
+      case 'transfrom':
+        this.logEventDom = $('<div class="custom-green-rectangle-point system-green-point"></div>');
         break;
-      case 'widgest':
+      case 'sink':
         this.widEndpointDom = $(`<div class="custom-green-circle-point widgest-point_1"></div>`);
         break;
       default:
     }
 
-    if (data.options.endPointLabel) {
-      let endpoint1 = $('<div class="endpointInfo endpoint1"></div>');
-      let endpoint2 = $('<div class="endpointInfo endpoint2"></div>');
-      let endpoint3 = $('<div class="endpointInfo endpoint3"></div>');
-      data.options.endPointLabel.forEach(item => {
-        if (item.endpoint === 'greenDom_0') {
-          endpoint1.append(`<span class="label_span">${item.label}</span>`);
-          endpoint1.append(this.greenDom_1);
-        } else if (item.endpoint === 'grayDom_1') {
-          endpoint2.append(`<span class="label_span">${item.label}</span>`);
-          endpoint2.append(this.grayDom_2);
-        } else if (item.endpoint === 'grayDom_2') {
-          endpoint3.append(`<span class="label_span">${item.label}</span>`);
-          endpoint3.append(this.grayDom_3);
-        }
-      });
-      container.append(endpoint1);
-      container.append(endpoint2);
-      container.append(endpoint3);
-    }
+    // if (this.logEventDom) {
+    //   container.append(this.logEventDom);
+    // }
 
-    if (this.logEventDom) {
-      container.append(this.logEventDom);
-    }
-
-    if (this.widEndpointDom) {
-      container.append(this.widEndpointDom);
-    }
+    // if (this.widEndpointDom) {
+    //   container.append(this.widEndpointDom);
+    // }
 
     container.append(`<span class='text'>${data.options.text}</span>`);
 
