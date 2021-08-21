@@ -4,9 +4,10 @@ import {Canvas} from 'butterfly-dag';
 import 'butterfly-dag/dist/index.css';
 import './index.less';
 import { ParamsFrom } from './ParamsFrom';
-
 import * as HotKeyPlugin from 'butterfly-dag/plugins/hotkey/dist/index.unpkg.js';
 import BaseEdge from './edge';
+import { notification } from 'antd';
+import _ from 'lodash';
 
 // import * as panelPlugins from 'butterfly-dag/plugins/panel/dist/index.js';
 
@@ -34,13 +35,13 @@ class EditorGraph extends Component {
         edge: {
           type: 'endpoint',    //线段连接类型
           shapeType: 'Bezier', //线条默认类型
-          label: 'test',       //线条默认label
           arrow: true,         //线条默认是否带箭头
           arrowPosition: 0.5,  //箭头位置(0 ~ 1)
           arrowOffset: 0.0,    //箭头偏移
           isExpandWidth: false,//增加线条交互区域
           shapeType: "AdvancedBezier",
-          Class: BaseEdge
+          Class: BaseEdge,
+          defaultAnimate: true//默认开启线条动画
         }
       }
     });
@@ -58,27 +59,77 @@ class EditorGraph extends Component {
     });
     this.canvas.setMinimap(true);
 
+    this.canvas.on('system.link.connect', (data) => {
+
+      console.log(data);
+      if(data != null) {
+        for(let i=0;i<data.links.length; i++) {
+          const edge = data.links[i];
+          const edgeId = edge.id;
+          const sourceNode = edge.sourceNode;
+          const targetNode = edge.targetNode;
+
+          const targetEndpoint = edge.targetEndpoint;
+  
+          console.log(targetNode.options);
+          if(targetNode.options['PluginType'] == "source") {
+            this.openNotification("warning", "提示", "任何情况下, 源都不准被允许放在箭头后面");
+            this.canvas.removeEdge(edgeId);
+          }  
+          if(sourceNode.options['PluginType'] == "sink") {
+            this.openNotification("warning", "提示", "任何情况下, 目标都不准被允许放在箭头后面");
+            this.canvas.removeEdge(edgeId);
+          }  
+          if(targetNode.options['id'] == sourceNode.options['id']) {
+            this.openNotification("warning", "提示", "连线前后的算子不可一致");
+            this.canvas.removeEdge(edgeId);
+          }  
+          if(_.filter(this.canvas.edges, (d) => {return d.targetEndpoint.id == targetEndpoint.id}).length >1 ) {
+            this.openNotification("warning", "提示", "同一个算子下同一个连接点的输入, 不能有两个");
+            this.canvas.removeEdge(edgeId);
+          }  
+        }
+      }
+    });
+
+    this.canvas.on('system.link.click', (data) => {
+      window.selectEdge = data.edge;
+      window.selectNodeOrEdge = data.edge;
+      console.log(data);
+    })
+
 
     
-    // HotKeyPlugin.register({
-    //   canvas: this.canvas,
-    //   root:document,
-    //   config:[{
-    //     key: "ctrl+M",
-    //     handler: () => {
-    //       console.log("ctrl+M");
-    //     }
-    //   },
-    //   {
-    //     key: 'A',
-    //     handler: () => {
-    //       console.log("A");
-    //     }
-    //   }]
-    // })
+    HotKeyPlugin.register({
+      canvas: this.canvas,
+      root:document,
+      config:[{
+        key: "delete",
+        handler: () => {
+          let selectNodeOrEdge = window.selectNodeOrEdge;
+          if(selectNodeOrEdge != undefined && selectNodeOrEdge['id'] ) {
+            if(selectNodeOrEdge.type == 'endpoint') {
+              this.canvas.removeEdge(selectNodeOrEdge['id']);
+            } else {
+              this.canvas.removeNode(selectNodeOrEdge['id']);
+            }
+          }
+        }
+      }]
+    })
     window.canvas = this.canvas;
-    window.canvas.emit('unfocus', () => {console.log(1)})
   }
+
+  openNotification = (type, title, message) => {
+    notification[type]({
+      message: title,
+      description: message,
+      duration: 3,
+      onClick: () => {
+        console.log('Notification Clicked!');
+      },
+    });
+  };  
 
   render() {
     return (

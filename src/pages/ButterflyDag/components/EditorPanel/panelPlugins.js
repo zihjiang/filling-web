@@ -63,7 +63,7 @@ class panelPlugins {
         jqImg.on('dragstart', (e)=>{
           e.originalEvent.dataTransfer.setData('id', item.id + '-' + this.guid());
           e.originalEvent.dataTransfer.setData('originId', item.id);
-          e.originalEvent.dataTransfer.setData('data', JSON.stringify(item.Data));
+          // e.originalEvent.dataTransfer.setData('data', JSON.stringify(item.Data));
           e.originalEvent.dataTransfer.setData('pluginType', item['pluginType']);
           e.originalEvent.dataTransfer.setData('pluginName', item['pluginName']);
           e.originalEvent.dataTransfer.setData('pluginOptions', JSON.stringify(item['pluginOptions']));
@@ -73,6 +73,7 @@ class panelPlugins {
         })
 
         nodeItem.append(img);
+        nodeItem.append(`<div class='panel-lab'> ${item['text']} </div>`);
         $(registerData.root).append(nodeItem);
       }
 
@@ -88,14 +89,14 @@ class panelPlugins {
           let coordinates = registerData.canvas.terminal2canvas([clientX, clientY]);
           let id = e.originalEvent.dataTransfer.getData('id');
           let content = e.originalEvent.dataTransfer.getData('originId');
-          let data = JSON.parse(e.originalEvent.dataTransfer.getData('data'));
-
-          let text = data.name || data["plugin_name"];
+          // let data = JSON.parse(e.originalEvent.dataTransfer.getData('data'));
 
           let endpoints = JSON.parse(e.originalEvent.dataTransfer.getData('endpoints'));
           let PluginType = e.originalEvent.dataTransfer.getData('PluginType');
           let pluginName = e.originalEvent.dataTransfer.getData('pluginName');
           let pluginOptions = e.originalEvent.dataTransfer.getData('pluginOptions');
+
+          let text = pluginName;
 
           let node = {
             id,
@@ -104,7 +105,7 @@ class panelPlugins {
             Class: BaseNode,
             pluginName: pluginName,
             pluginOptions: pluginOptions,
-            Data: data,
+            // Data: data,
             PluginType: PluginType,
             endpoints: endpoints,
             content,

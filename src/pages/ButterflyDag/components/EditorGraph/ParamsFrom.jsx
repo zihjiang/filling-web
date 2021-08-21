@@ -4,6 +4,11 @@ import $ from 'jquery';
 import ProForm, {
   DrawerForm,
   ProFormText,
+  ProFormTextArea,
+  ProFormDigit,
+  ProFormRadio,
+  ProFormSelect
+
 } from '@ant-design/pro-form';
 import { PlusOutlined } from '@ant-design/icons';
 
@@ -13,7 +18,7 @@ class ParamsFrom extends Component {
 
     this.state = {
       data: {},
-      pluginName: {},
+      pluginName: "",
       pluginOptions: []
     }
 
@@ -31,17 +36,16 @@ class ParamsFrom extends Component {
     this.setState({
       data: window.selectNode.options.Data,
       pluginName: window.selectNode.options.pluginName,
-      pluginOptions: window.selectNode.options.pluginOptions
+      pluginOptions: JSON.parse(window.selectNode.options.pluginOptions)
     });
     console.log("window.selectNode: ", window.selectNode);
-    console.log(window.selectNode.options.Data);
   }
 
 
   render() {
     return (
       <DrawerForm
-        title={this.state.data.plugin_name}
+        title={this.state.pluginName}
         trigger={
           <div onClick={this.handleUpdate}>
             <PlusOutlined />
@@ -63,23 +67,77 @@ class ParamsFrom extends Component {
 
         {
           this.state.pluginOptions.map((item, idx) => {
-            return <ProFormText 
-              key={idx} 
-              name={item.name} 
-              label={item.text} 
-              placeholder={item.paramsDesc} 
-              initialValues={item.defaultValue} 
-            />
+            switch (item.type) {
+              case "text":
+                return <ProFormText
+                  key={idx}
+                  name={item.name}
+                  label={item.text}
+                  placeholder={item.paramsDesc}
+                  initialValue={item.defaultValue}
+                  style={{ display: item.display }}
+                  disabled={item.readOnly}
+                  formItemProps={
+                    {
+                      rules: [
+                        {
+                          required: item.required,
+                          message: `${item.text}是必须的`,
+                        },
+                      ],
+                    }
+                  }
+                />
+              case "textArea":
+                return <ProFormTextArea
+                  key={idx}
+                  name={item.name}
+                  label={item.text}
+                  placeholder={item.paramsDesc}
+                  initialValue={item.defaultValue}
+                  style={{ display: item.display }}
+                  disabled={item.readOnly}
+                />
+              case "digit":
+                return <ProFormDigit
+                  key={idx}
+                  name={item.name}
+                  label={item.text}
+                  placeholder={item.paramsDesc}
+                  initialValue={item.defaultValue}
+                  style={{ display: item.display }}
+                  min={item.digitMin} 
+                  max={item.digitMax}
+                  disabled={item.readOnly}
+                />
+
+              case "select":
+                return <ProFormSelect 
+                  key={idx}
+                  name={item.name}
+                  abel={item.text}
+                  placeholder={item.paramsDesc}
+                  initialValue={item.defaultValue}
+                  style={{ display: item.display }}
+                  disabled={item.readOnly}
+                  options={item.selectOptions}>
+                </ProFormSelect>
+
+
+              case "array":
+                return <ProFormTextArea 
+                  key={idx}
+                  name={item.name}
+                  abel={item.text}
+                  placeholder={item.paramsDesc}
+                  initialValue={item.defaultValue}
+                  style={{ display: item.display }}
+                  disabled={item.readOnly}
+                  options={item.selectOptions}>
+                </ProFormTextArea>
+            }
           })
         }
-
-        {/* <ProFormText width="md" name="contract" label="source_table_name" id="source_table_name" placeholder="source_table_name" initialValue={ this.state.data.result_table_name } />
-
-        <ProFormText width="md" name="contract" label="result_table_name" id="result_table_name"  placeholder="result_table_name" />
-        
-        <ProFormText width='md' name="id" label="主合同编号" />
-        <ProFormText name="project" disabled label="项目名称" initialValue="xxxx项目" />
-        <ProFormText width="md" name="mangerName" disabled label="商务经理" initialValue="启途" /> */}
       </DrawerForm>
     );
   }

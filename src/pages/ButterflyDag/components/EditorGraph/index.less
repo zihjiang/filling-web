@@ -36,6 +36,7 @@
         stroke-width: 3px;
         stroke: #ff8637;
       }
+      cursor: pointer;
     }
     .test-base-node{
       height: 32px;
@@ -49,6 +50,7 @@
       background: #3c3a3a;
       text-align: center;
       color: #bfbfbf;
+      cursor: pointer;
       &.active {
         border: 2px solid #ff8637;
         box-shadow: 0 2px 12px 0 rgba(0,0,0,.8);
@@ -120,6 +122,9 @@
           top: calc(~ "83% - 10px");
         }
       }
+    }
+    .test-base-node_selected {
+      border: 1px solid #dedede;
     }
     .system-green-point{
       background: #55ea55;

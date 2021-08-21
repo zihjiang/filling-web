@@ -1,96 +1,121 @@
 import kafkaIcon from './images/kafka.png';
 import jdbsIcon from './images/jdbc.png';
+import dataGenIcon from './images/dataGen.png';
+import DataAggregatesIcon from './images/DataAggregates.png';
+
 import BaseEndpoint from '../EditorGraph/endpoint';
-const data = [
+
+import _ from 'lodash';
+const source = [
     {
         id: 'kafka',
+        text: 'kafka consumer',
         type: 'png',
         content: kafkaIcon,
         height: 90,
         width: "100%",
         pluginType: 'source',
-        Data: {
-            "plugin_name": "KafkaTableStream",
-            "consumer.group.id": "filling06",
-            "topics": "arcana",
-            "result_table_name": "KafkaTableStreamTable",
-            "format.type": "json",
-            "schema": "{\"host\":\"f0e31d4cd63b\",\"@timestamp\":\"2021-08-12T03:27:57.316Z\",\"path\":\"/sample_data/apache_access_logs_1000w_02\",\"message\":\"127.0.0.1 - - [19/Jun/1998:23:12:52 +0000] \\\"GET /images/logo_cfo.gif HTTP/1.0\\\" 304 0\",\"@version\":\"1\"}",
-            "offset.reset": "earliest",
-            "consumer.bootstrap.servers": "192.168.1.70:9092",
-            "parallelism": 2,
-            "name": "mykafka"
-        },
-        pluginName: "JdbcSource",
+
+        pluginName: "KafkaTableStream",
         pluginOptions: [
             {
                 "name": "plugin_name",
                 "text": "插件名称",
                 "defaultValue": "KafkaTableStream",
-                "must": true,
+                "required": true,
                 "paramsDesc": "插件名称, 系统自带, 无需更改",
                 "desc": " ",
-                "readOnly": true
-            },{
+                "display": "none",
+                "readOnly": true,
+                "type": "text"
+            }, {
                 "name": "consumer.group.id",
                 "text": "消费组",
                 "defaultValue": "filling-group01",
-                "must": true,
+                "required": true,
                 "paramsDesc": "kafka里的group.id参数",
                 "desc": " ",
-                "readOnly": false
-            },{
+
+                "readOnly": false,
+                "type": "text"
+            }, {
                 "name": "topics",
                 "text": "订阅组",
                 "defaultValue": "filling-topic",
-                "must": true,
+                "required": true,
                 "paramsDesc": "kakfa的topic参数, 可以数多个, 用`,`分割",
                 "desc": " ",
-                "readOnly": false
-            },{
+
+                "readOnly": false,
+                "type": "text"
+            }, {
                 "name": "schema",
                 "text": "简单数据",
                 "defaultValue": "{\"host\":\"f0e31d4cd63b\",\"@timestamp\":\"2021-08-12T03:27:57.316Z\",\"path\":\"/sample_data/apache_access_logs_1000w_02\",\"message\":\"127.0.0.1 - - [19/Jun/1998:23:12:52 +0000] \\\"GET /images/logo_cfo.gif HTTP/1.0\\\" 304 0\",\"@version\":\"1\"}",
-                "must": true,
+                "required": true,
                 "paramsDesc": "数据样本, 用来解析数据格式",
                 "desc": " ",
-                "readOnly": false
-            },{
+
+                "readOnly": false,
+                "type": "textArea"
+            }, {
                 "name": "offset.reset",
                 "text": "消费模式",
                 "defaultValue": "earliest",
-                "must": true,
+                "required": true,
                 "paramsDesc": "earliest: 尽可能从最早消费数据,latest: 从最新处消费数据,fromTimestamp: 指定时间戳消费, fromGroupOffsets: 从当前的offset消费, 若果不存在offset, 则和latest一致",
                 "desc": " ",
-                "readOnly": false
-            },{
+
+                "readOnly": false,
+                "type": "select",
+                "selectOptions": [
+                    {
+                        "value": "earliest",
+                        "label": "最早处消费数据"
+                    }, {
+                        "value": "latest",
+                        "label": "最新处消费数据"
+                    }, {
+                        "value": "fromGroupOffsets",
+                        "label": "当前消费位置消费数据"
+                    }
+                ]
+            }, {
                 "name": "consumer.bootstrap.servers",
                 "text": "kakfa地址",
                 "defaultValue": "192.168.1.70:9092",
-                "must": true,
+                "required": true,
                 "paramsDesc": "kakfa地址, 例如: 127.0.0.1:9092",
                 "desc": " ",
-                "readOnly": false
-            },{
+
+                "readOnly": false,
+                "type": "text"
+            }, {
                 "name": "parallelism",
                 "text": "并行度",
                 "defaultValue": "1",
-                "must": true,
+                "required": true,
                 "paramsDesc": "flink并行度设置, 请谨慎设置",
                 "desc": " ",
-                "readOnly": false
-            },{
+
+                "readOnly": false,
+                "type": "digit",
+                "digitMin": 1,
+                "digitMax": 20,
+            }, {
                 "name": "name",
                 "text": "名称",
                 "defaultValue": "kafka-source",
-                "must": true,
+                "required": true,
                 "paramsDesc": "自定义名称, 显示用",
                 "desc": " ",
-                "readOnly": false
+
+                "readOnly": false,
+                "type": "text"
             }
         ],
         endpoints: [{
-            id: 'kafka_out',
+            id: 'kafka_result_table_name',
             orientation: [1, 0],
             pos: [0, 0.5],
             Class: BaseEndpoint,
@@ -99,96 +124,359 @@ const data = [
     },
     {
         id: 'jdbc',
+        text: 'jdbc源',
         type: 'png',
-        Data: {
-            "plugin_name": "JdbcSource",
-            "driver": "com.mysql.jdbc.Driver",
-            "result_table_name": "JdbcSourceTable",
-            "url": "jdbc:mysql://10.10.14.17:3306/tmp",
-            "username": "aiops",
-            "password": "aiops",
-            "query": "select * from t_group"
-        },
+        Data: {},
         pluginType: 'source',
         pluginName: "JdbcSource",
         pluginOptions: [
             {
-                "name": "plugin_name",
-                "text": "插件名称",
-                "defaultValue": "JdbcSource",
-                "must": true,
-                "paramsDesc": "插件名称, 系统自带, 无需更改",
-                "desc": " ",
-                "readOnly": true
-            },{
-                "name": "driver",
-                "text": "驱动",
-                "defaultValue": "com.mysql.cj.jdbc.Driver",
-                "must": true,
-                "paramsDesc": "jdbc驱动类",
-                "desc": " ",
-                "readOnly": false
-            },{
-                "name": "url",
-                "text": "链接字符串",
-                "defaultValue": "jdbc:mysql://127.0.0.1:3306/test_demo?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC",
-                "must": true,
-                "paramsDesc": "链接字符串, 例如: jdbc:mysql://127.0.0.1:3306/test_demo",
-                "desc": " ",
-                "readOnly": false
-            },{
-                "name": "username",
-                "text": "用户名",
-                "defaultValue": "root",
-                "must": true,
-                "paramsDesc": "链接数据库用户名",
-                "desc": " ",
-                "readOnly": false
-            },{
-                "name": "password",
-                "text": "密码",
-                "defaultValue": "root",
-                "must": true,
-                "paramsDesc": "链接数据库密码",
-                "desc": " ",
-                "readOnly": false
-            },{
-                "name": "query",
-                "text": "查询语句",
-                "defaultValue": "select * from table1",
-                "must": true,
-                "paramsDesc": "查询的数据库语句, 例如: select * from table1",
-                "desc": " ",
-                "readOnly": false
-            },{
-                "name": "fetch_size",
-                "text": "拉取数量",
-                "defaultValue": "1000",
-                "must": true,
-                "paramsDesc": "每次拉取的数量",
-                "desc": " ",
-                "readOnly": false
-            },{
-                "name": "parallelism",
-                "text": "并行度",
-                "defaultValue": "1",
-                "must": true,
-                "paramsDesc": "flink并行度设置, 请谨慎设置",
-                "desc": " ",
-                "readOnly": false
-            },{
                 "name": "name",
                 "text": "名称",
                 "defaultValue": "kafka-source",
-                "must": true,
+                "required": true,
                 "paramsDesc": "自定义名称, 显示用",
                 "desc": " ",
-                "readOnly": false
+
+                "readOnly": false,
+                "type": "text"
+            }, {
+                "name": "plugin_name",
+                "text": "插件名称",
+                "defaultValue": "JdbcSource",
+                "required": true,
+                "paramsDesc": "插件名称, 系统自带, 无需更改",
+                "desc": " ",
+                "display": "none",
+                "readOnly": true,
+                "type": "text"
+            }, {
+                "name": "driver",
+                "text": "驱动",
+                "defaultValue": "com.mysql.cj.jdbc.Driver",
+                "required": true,
+                "paramsDesc": "jdbc驱动类",
+                "desc": " ",
+
+                "readOnly": false,
+                "type": "text"
+            }, {
+                "name": "url",
+                "text": "链接字符串",
+                "defaultValue": "jdbc:mysql://127.0.0.1:3306/test_demo?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC",
+                "required": true,
+                "paramsDesc": "链接字符串, 例如: jdbc:mysql://127.0.0.1:3306/test_demo",
+                "desc": " ",
+
+                "readOnly": false,
+                "type": "text"
+            }, {
+                "name": "username",
+                "text": "用户名",
+                "defaultValue": "root",
+                "required": true,
+                "paramsDesc": "链接数据库用户名",
+                "desc": " ",
+
+                "readOnly": false,
+                "type": "text"
+            }, {
+                "name": "password",
+                "text": "密码",
+                "defaultValue": "root",
+                "required": true,
+                "paramsDesc": "链接数据库密码",
+                "desc": " ",
+
+                "readOnly": false,
+                "type": "text"
+            }, {
+                "name": "query",
+                "text": "查询语句",
+                "defaultValue": "select * from table1",
+                "required": true,
+                "paramsDesc": "查询的数据库语句, 例如: select * from table1",
+                "desc": " ",
+
+                "readOnly": false,
+                "type": "text"
+            }, {
+                "name": "fetch_size",
+                "text": "拉取数量",
+                "defaultValue": "1000",
+                "required": true,
+                "paramsDesc": "每次拉取的数量",
+                "desc": " ",
+
+                "readOnly": false,
+                "type": "text"
+            }, {
+                "name": "parallelism",
+                "text": "并行度",
+                "defaultValue": "1",
+                "required": true,
+                "paramsDesc": "flink并行度设置, 请谨慎设置",
+                "desc": " ",
+
+                "readOnly": false,
+                "type": "digit"
             }
         ],
+        endpoints: [{
+            id: 'jdbc_result_table_name',
+            orientation: [1, 0],
+            pos: [0, 0.5],
+            Class: BaseEndpoint,
+            color: 'system-green'
+        }],
         content: jdbsIcon,
         height: 90,
         width: "100%"
+    },
+    {
+        id: 'dataGen',
+        text: 'dataGen源',
+        type: 'png',
+        Data: {
+            "plugin_name": "DataGenTableStream",
+            "result_table_name": "dataGenTableStreamTable",
+            "schema": "{\"id\":1, \"host\":\"192.168.1.103\",\"source\":\"datasource\",\"MetricsName\":\"cpu\",\"value\":49}",
+            "rows-per-second": 1000000,
+            "number-of-rows": 100000000,
+            "fields": [
+                {
+                    "id": {
+                        "kind": "SEQUENCE",
+                        "type": "Int",
+                        "start": 0,
+                        "end": 10000000
+                    }
+                },
+                {
+                    "host": {
+                        "type": "String",
+                        "length": 1
+                    }
+                },
+                {
+                    "source": {
+                        "type": "String",
+                        "length": 10
+                    }
+                },
+                {
+                    "MetricsName": {
+                        "type": "String",
+                        "length": 10
+                    }
+                },
+                {
+                    "value": {
+                        "type": "Int",
+                        "min": 1,
+                        "max": 2
+                    }
+                }
+            ],
+            "parallelism": 5,
+            "name": "my-datagen-source"
+        },
+        pluginType: 'source',
+        pluginName: "dataGenSource",
+        pluginOptions: [
+            {
+                "name": "name",
+                "text": "名称",
+                "defaultValue": "kafka-source",
+                "required": true,
+                "paramsDesc": "自定义名称, 显示用",
+                "desc": " ",
+
+                "readOnly": false,
+                "type": "text"
+            }, {
+                "name": "plugin_name",
+                "text": "插件名称",
+                "defaultValue": "dataGenSource",
+                "required": true,
+                "paramsDesc": "插件名称, 系统自带, 无需更改",
+                "desc": " ",
+                "display": "none",
+                "readOnly": true,
+                "type": "text"
+            }, {
+                "name": "schema",
+                "text": "简单数据",
+                "defaultValue": "{\"host\":\"f0e31d4cd63b\",\"@timestamp\":\"2021-08-12T03:27:57.316Z\",\"path\":\"/sample_data/apache_access_logs_1000w_02\",\"message\":\"127.0.0.1 - - [19/Jun/1998:23:12:52 +0000] \\\"GET /images/logo_cfo.gif HTTP/1.0\\\" 304 0\",\"@version\":\"1\"}",
+                "required": true,
+                "paramsDesc": "数据样本, 用来解析数据格式",
+                "desc": " ",
+
+                "readOnly": false,
+                "type": "textArea"
+            }, {
+                "name": "rows-per-second",
+                "text": "每秒钟生成行数",
+                "defaultValue": "10000",
+                "required": true,
+                "paramsDesc": "一秒之内, 生成多少条数据",
+                "desc": " ",
+
+                "readOnly": false,
+                "type": "text"
+            }, {
+                "name": "number-of-rows",
+                "text": "一共生成行数",
+                "defaultValue": "10000000",
+                "required": true,
+                "paramsDesc": "本次任务一共要生成多少条数据",
+                "desc": " ",
+
+                "readOnly": false,
+                "type": "text"
+            }, {
+                "name": "fields",
+                "text": "字段",
+                "defaultValue": [],
+                "required": true,
+                "paramsDesc": "字段生成方式",
+                "desc": " ",
+
+                "readOnly": false,
+                "type": "array"
+            }, {
+                "name": "parallelism",
+                "text": "并行度",
+                "defaultValue": "1",
+                "required": true,
+                "paramsDesc": "flink并行度设置, 请谨慎设置",
+                "desc": " ",
+
+                "readOnly": false,
+                "type": "digit"
+            }
+        ],
+        endpoints: [{
+            id: 'dataGen_result_table_name',
+            orientation: [1, 0],
+            pos: [0, 0.5],
+            Class: BaseEndpoint,
+            color: 'system-green'
+        }],
+        content: dataGenIcon,
+        height: 90,
+        width: "100%"
+    },
+];
+const transfrom = [
+    {
+        id: 'DataAggregates',
+        text: '时间聚合',
+        type: 'png',
+        Data: {},
+        pluginType: 'transfrom',
+        pluginName: "DataAggregates",
+        pluginOptions: [
+            {
+                "name": "name",
+                "text": "名称",
+                "defaultValue": "kafka-source",
+                "required": true,
+                "paramsDesc": "自定义名称, 显示用",
+                "desc": " ",
+
+                "readOnly": false,
+                "type": "text"
+            }, {
+                "name": "plugin_name",
+                "text": "插件名称",
+                "defaultValue": "DataAggregates",
+                "required": true,
+                "paramsDesc": "插件名称, 系统自带, 无需更改",
+                "desc": " ",
+                "display": "none",
+                "readOnly": true,
+                "type": "text"
+            }, {
+                "name": "rowtime.watermark.field",
+                "text": "时间字段",
+                "defaultValue": "_time",
+                "required": true,
+                "paramsDesc": "时间字段, 必须是13位时间戳类型",
+                "desc": " ",
+                "readOnly": false,
+                "type": "text"
+            }, {
+                "name": "rowtime.watermark.tumble.ms",
+                "text": "翻滚窗口的大小(毫秒)",
+                "defaultValue": "60000",
+                "required": true,
+                "paramsDesc": "翻滚窗口的大小, 单位是毫秒",
+                "desc": " ",
+                "readOnly": false,
+                "type": "digit",
+                "digitMin": "10",
+                "digitMax": "9999999999"
+            }, {
+                "name": "rowtime.watermark.tumble.delay.ms",
+                "text": "允许数据迟到时间",
+                "defaultValue": "60000",
+                "required": true,
+                "paramsDesc": "允许数据迟到时间, 单位是毫秒",
+                "desc": " ",
+                "readOnly": false,
+                "type": "text"
+            }, {
+                "name": "group.fields",
+                "text": "聚合字段",
+                "defaultValue": "",
+                "required": true,
+                "paramsDesc": "聚合的字段, 多个字段逗号分割",
+                "desc": " ",
+                "readOnly": false,
+                "type": "text"
+            }, {
+                "name": "custom.fields",
+                "text": "自定义聚合字段",
+                "defaultValue": "",
+                "required": true,
+                "paramsDesc": "除了对group.fields字段聚合, 还可以自定义聚合字段, 这里设置的是字段名称",
+                "desc": " ",
+                "readOnly": false,
+                "type": "text"
+            }, {
+                "name": "parallelism",
+                "text": "并行度",
+                "defaultValue": "1",
+                "required": true,
+                "paramsDesc": "flink并行度设置, 请谨慎设置",
+                "desc": " ",
+
+                "readOnly": false,
+                "type": "digit"
+            }
+        ],
+        endpoints: [{
+            id: 'DataAggregates_result_table_name',
+            orientation: [1, 0],
+            pos: [0, 0.5],
+            Class: BaseEndpoint,
+            color: 'system-green'
+        }, {
+            id: 'DataAggregates_source_table_name',
+            orientation: [-1, 0],
+            pos: [0, 0.5],
+            Class: BaseEndpoint,
+            color: 'system-green'
+        }],
+        content: DataAggregatesIcon,
+        height: 90,
+        width: "100%"
     }
-]
+];
+const sink = [
+
+];
+
+const data = _.concat(source, transfrom, sink);
 export default data;

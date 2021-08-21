@@ -10,47 +10,15 @@ class BaseNode extends Node {
 
   }
   mounted() {
-    if (this.grayDom_3) {
-      this.addEndpoint({
-        id: 'gamepad_0',
-        dom: this.grayDom_3,
-      });
-    }
-    if (this.greenDom_1) {
-      this.addEndpoint({
-        id: 'gamepad_1',
-        dom: this.greenDom_1
-      });
-    }
-    if (this.grayDom_2) {
-      this.addEndpoint({
-        id: 'gamepad_2',
-        dom: this.grayDom_2
-      });
-    }
-    if (this.logEventDom) {
-      this.addEndpoint({
-        id: 'log_event_01',
-        dom: this.logEventDom,
-      });
-    }
-    if (this.widEndpointDom) {
-      this.addEndpoint({
-        id: 'widgest_1',
-        orientation: [1, 0],
-        dom: this.widEndpointDom,
-      });
-    }
+    
   }
 
   
   draw = (data) => {
-    console.log('draw', data);
-    console.log('draw this', this.options);
     let container = $('<div class= "test-base-node"></div>')
       .css('top', data.top)
       .css('left', data.left)
-      .css('width', data.options.width)
+      .css('width', 140)
       .css('height', 90);
     switch (this.options.PluginType) {
       case 'source' :
@@ -79,8 +47,18 @@ class BaseNode extends Node {
     $(container).on('dblclick', () => {
       // paramsFrom
       window.selectNode = data;
+      window.selectNodeOrEdge = data;
       $("#ParamsFrom > div").trigger('click');
     });
+
+    $(container).on('click', () => {
+      // paramsFrom
+      window.selectNode = data;
+      window.selectNodeOrEdge = data;
+      $('.test-base-node').removeClass('test-base-node_selected');
+      $(container).addClass('test-base-node_selected');
+    });
+
     return container[0];
   }
 
