@@ -55,6 +55,10 @@ class EditorToolbar extends Component {
         window.canvas.zoom(canvas.getZoom()-0.1);
     }
 
+    debugMode = () => {
+        const data = window.canvas.getDataMap();
+        console.log(data);
+    }
   
     render() {
         return (
@@ -65,7 +69,7 @@ class EditorToolbar extends Component {
                 <LayoutFilled onClick={this.autoLayout} title="自动对齐"/>
                 <ZoomInOutlined onClick={this.zoomIn} title="放大"/>
                 <ZoomOutOutlined onClick={this.zoomInOut} title="缩小"/>
-                <BugFilled title="调试"/>
+                <BugFilled title="调试" onClick={this.debugMode}/>
                 <CheckCircleFilled title="检查"/>
                 <PlayCircleFilled title="启动"/>
             </div>

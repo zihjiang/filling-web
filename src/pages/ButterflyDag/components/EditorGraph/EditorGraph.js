@@ -77,16 +77,23 @@ class EditorGraph extends Component {
             this.canvas.removeEdge(edgeId);
           }  
           if(sourceNode.options['PluginType'] == "sink") {
-            this.openNotification("warning", "提示", "任何情况下, 目标都不准被允许放在箭头后面");
+            this.openNotification("warning", "提示", "任何情况下, 源目标都不准被允许放在箭头前面");
+            this.canvas.removeEdge(edgeId);
+          }  
+          if(_.difference(edge.sourceEndpoint.orientation, [-1, 0]).length == 0) {
+            this.openNotification("warning", "提示", "任何情况下, 源目标都不准连在前面");
             this.canvas.removeEdge(edgeId);
           }  
           if(targetNode.options['id'] == sourceNode.options['id']) {
             this.openNotification("warning", "提示", "连线前后的算子不可一致");
             this.canvas.removeEdge(edgeId);
           }  
-          if(_.filter(this.canvas.edges, (d) => {return d.targetEndpoint.id == targetEndpoint.id}).length >1 ) {
-            this.openNotification("warning", "提示", "同一个算子下同一个连接点的输入, 不能有两个");
-            this.canvas.removeEdge(edgeId);
+          if(_.filter(this.canvas.edges, (d) => {return d.targetEndpoint.nodeId == targetEndpoint.nodeId}).length >1 ) {
+            // 只有在pluginName不等于DataJoin的时候才触发
+            if(targetNode.options.pluginName != "DataJoin") {
+              this.openNotification("warning", "提示", "同一个算子下同一个连接点的输入, 不能有两个");
+              this.canvas.removeEdge(edgeId);
+            }
           }  
         }
       }

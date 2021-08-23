@@ -2,6 +2,10 @@ import kafkaIcon from './images/kafka.png';
 import jdbsIcon from './images/jdbc.png';
 import dataGenIcon from './images/dataGen.png';
 import DataAggregatesIcon from './images/DataAggregates.png';
+import enbase64Icon from './images/enbase64.png';
+import debase64Icon from './images/debase64.png';
+import dataJoinIcon from './images/dataJoin.png';
+import dataSelecterIcon from './images/dataSelecter.png';
 
 import BaseEndpoint from '../EditorGraph/endpoint';
 
@@ -470,6 +474,251 @@ const transfrom = [
             color: 'system-green'
         }],
         content: DataAggregatesIcon,
+        height: 90,
+        width: "100%"
+    },
+    {
+        id: 'DecodeBase64',
+        text: 'Decode base64',
+        type: 'png',
+        Data: {},
+        pluginType: 'transfrom',
+        pluginName: "DecodeBase64",
+        pluginOptions: [
+            {
+                "name": "name",
+                "text": "名称",
+                "defaultValue": "DecodeBase64-transfrom",
+                "required": true,
+                "paramsDesc": "自定义名称, 显示用",
+                "desc": " ",
+
+                "readOnly": false,
+                "type": "text"
+            }, {
+                "name": "plugin_name",
+                "text": "插件名称",
+                "defaultValue": "DecodeBase64",
+                "required": true,
+                "paramsDesc": "插件名称, 系统自带, 无需更改",
+                "desc": " ",
+                "display": "none",
+                "readOnly": true,
+                "type": "text"
+            }, {
+                "name": "source_field",
+                "text": "源字段名",
+                "defaultValue": "",
+                "required": true,
+                "paramsDesc": "源字段名",
+                "desc": " ",
+                "display": "none",
+                "readOnly": false,
+                "type": "text"
+            }, {
+                "name": "target_field",
+                "text": "目标字段名",
+                "defaultValue": "",
+                "required": true,
+                "paramsDesc": "目标字段名",
+                "desc": " ",
+                "display": "none",
+                "readOnly": false,
+                "type": "text"
+            },{
+                "name": "parallelism",
+                "text": "并行度",
+                "defaultValue": "1",
+                "required": true,
+                "paramsDesc": "flink并行度设置, 请谨慎设置",
+                "desc": " ",
+
+                "readOnly": false,
+                "type": "digit"
+            }
+        ],
+        endpoints: [{
+            id: 'DecodeBase64_result_table_name',
+            orientation: [1, 0],
+            pos: [0, 0.5],
+            Class: BaseEndpoint,
+            color: 'system-green'
+        }, {
+            id: 'DecodeBase64_source_table_name',
+            orientation: [-1, 0],
+            pos: [0, 0.5],
+            Class: BaseEndpoint,
+            color: 'system-green'
+        }],
+        content: debase64Icon,
+        height: 90,
+        width: "100%"
+    },
+    {
+        id: 'EncodeBase64',
+        text: 'Encode base64',
+        type: 'png',
+        Data: {},
+        pluginType: 'transfrom',
+        pluginName: "EncodeBase64",
+        pluginOptions: [
+            {
+                "name": "name",
+                "text": "名称",
+                "defaultValue": "EncodeBase64-transfrom",
+                "required": true,
+                "paramsDesc": "自定义名称, 显示用",
+                "desc": " ",
+
+                "readOnly": false,
+                "type": "text"
+            }, {
+                "name": "plugin_name",
+                "text": "插件名称",
+                "defaultValue": "EncodeBase64",
+                "required": true,
+                "paramsDesc": "插件名称, 系统自带, 无需更改",
+                "desc": " ",
+                "display": "none",
+                "readOnly": true,
+                "type": "text"
+            }, {
+                "name": "source_field",
+                "text": "源字段名",
+                "defaultValue": "",
+                "required": true,
+                "paramsDesc": "源字段名",
+                "desc": " ",
+                "display": "none",
+                "readOnly": false,
+                "type": "text"
+            }, {
+                "name": "target_field",
+                "text": "目标字段名",
+                "defaultValue": "",
+                "required": true,
+                "paramsDesc": "目标字段名",
+                "desc": " ",
+                "display": "none",
+                "readOnly": false,
+                "type": "text"
+            },{
+                "name": "parallelism",
+                "text": "并行度",
+                "defaultValue": "1",
+                "required": true,
+                "paramsDesc": "flink并行度设置, 请谨慎设置",
+                "desc": " ",
+
+                "readOnly": false,
+                "type": "digit"
+            }
+        ],
+        endpoints: [{
+            id: 'Enbase64_result_table_name',
+            orientation: [1, 0],
+            pos: [0, 0.5],
+            Class: BaseEndpoint,
+            color: 'system-green'
+        }, {
+            id: 'Enbase64_source_table_name',
+            orientation: [-1, 0],
+            pos: [0, 0.5],
+            Class: BaseEndpoint,
+            color: 'system-green'
+        }],
+        content: enbase64Icon,
+        height: 90,
+        width: "100%"
+    },
+    {
+        id: 'DataJoin',
+        text: 'DataJoin',
+        type: 'png',
+        Data: {},
+        pluginType: 'transfrom',
+        pluginName: "DataJoin",
+        pluginOptions: [
+            {
+                "name": "name",
+                "text": "名称",
+                "defaultValue": "DataJoin-transfrom",
+                "required": true,
+                "paramsDesc": "自定义名称, 显示用",
+                "desc": " ",
+
+                "readOnly": false,
+                "type": "text"
+            }, {
+                "name": "plugin_name",
+                "text": "插件名称",
+                "defaultValue": "DataJoin",
+                "required": true,
+                "paramsDesc": "插件名称, 系统自带, 无需更改",
+                "desc": " ",
+                "display": "none",
+                "readOnly": true,
+                "type": "text"
+            }, {
+                "name": "join.*.where",
+                "text": "需要join的表",
+                "defaultValue": "",
+                "required": true,
+                "paramsDesc": "需要join的表",
+                "desc": " ",
+                "display": "none",
+                "readOnly": false,
+                "type": "text"
+            }, {
+                "name": "join.*.type",
+                "text": "关联类型",
+                "defaultValue": "left",
+                "required": true,
+                "paramsDesc": "关联类型",
+                "desc": " ",
+                "display": "none",
+                "readOnly": false,
+                "selectOptions": [
+                    {
+                        "value": "left",
+                        "label": "左关联"
+                    }, {
+                        "value": "right",
+                        "label": "有关联"
+                    }
+                ]
+            },{
+                "name": "parallelism",
+                "text": "并行度",
+                "defaultValue": "1",
+                "required": true,
+                "paramsDesc": "flink并行度设置, 请谨慎设置",
+                "desc": " ",
+
+                "readOnly": false,
+                "type": "digit"
+            }
+        ],
+        endpoints: [{
+            id: 'DataJoin_join01_result_table_name',
+            orientation: [-1, 0],
+            pos: [0, 0.5],
+            Class: BaseEndpoint,
+            color: 'system-green'
+        },{
+            id: 'DataJoin_join02_result_table_name',
+            orientation: [-1, 0],
+            pos: [0, 0.8],
+            Class: BaseEndpoint,
+            color: 'system-green'
+        }, {
+            id: 'DataJoin_source_table_name',
+            orientation: [1, 0],
+            pos: [0, 0.5],
+            Class: BaseEndpoint,
+            color: 'system-green'
+        }],
+        content: dataJoinIcon,
         height: 90,
         width: "100%"
     }
