@@ -43,8 +43,8 @@ class EditorToolbar extends Component {
     autoLayout = () => {
         window.canvas.autoLayout('dagreLayout', {
             'rankdir': 'LR',
-            'nodesep': 40,
-            'ranksep': 40,
+            'nodesep': 50,
+            'ranksep': 50,
             'controlPoints': false,
           });
     }
