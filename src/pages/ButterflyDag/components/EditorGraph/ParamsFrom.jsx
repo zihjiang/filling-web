@@ -1,4 +1,4 @@
-import React, { useRef, Component } from 'react';
+import React, { useRef, Component, useState } from 'react';
 import { Button, message } from 'antd';
 import $ from 'jquery';
 import ProForm, {
@@ -7,7 +7,8 @@ import ProForm, {
   ProFormTextArea,
   ProFormDigit,
   ProFormRadio,
-  ProFormSelect
+  ProFormSelect,
+  ProField
 
 } from '@ant-design/pro-form';
 import { PlusOutlined } from '@ant-design/icons';
@@ -19,15 +20,14 @@ class ParamsFrom extends Component {
     this.state = {
       data: {},
       pluginName: "",
-      pluginOptions: []
+      pluginOptions: [],
+      initialValues: {
+      }
     }
 
   }
 
   componentDidMount() {
-
-
-
   }
 
   handleUpdate = () => {
@@ -43,13 +43,15 @@ class ParamsFrom extends Component {
 
 
   render() {
+    let initialValue = this.state.initialValues;
+
     return (
+      <>
       <DrawerForm
         title={this.state.pluginName}
         trigger={
           <div onClick={this.handleUpdate}>
             <PlusOutlined />
-            {1}
           </div>
         }
         drawerProps={{
@@ -63,6 +65,7 @@ class ParamsFrom extends Component {
           return true;
         }}
         width='20%'
+        initialValues={initialValue}
       >
 
         {
@@ -106,13 +109,13 @@ class ParamsFrom extends Component {
                   placeholder={item.paramsDesc}
                   initialValue={item.defaultValue}
                   style={{ display: item.display }}
-                  min={item.digitMin} 
+                  min={item.digitMin}
                   max={item.digitMax}
                   disabled={item.readOnly}
                 />
 
               case "select":
-                return <ProFormSelect 
+                return <ProFormSelect
                   key={idx}
                   name={item.name}
                   abel={item.text}
@@ -123,9 +126,8 @@ class ParamsFrom extends Component {
                   options={item.selectOptions}>
                 </ProFormSelect>
 
-
               case "array":
-                return <ProFormTextArea 
+                return <ProFormTextArea
                   key={idx}
                   name={item.name}
                   abel={item.text}
@@ -139,6 +141,7 @@ class ParamsFrom extends Component {
           })
         }
       </DrawerForm>
+      </>
     );
   }
 }

@@ -660,7 +660,7 @@ const transfrom = [
                 "readOnly": true,
                 "type": "text"
             }, {
-                "name": "join.*.where",
+                "name": "join.source_table_name",
                 "text": "需要join的表",
                 "defaultValue": "",
                 "required": true,
@@ -669,8 +669,18 @@ const transfrom = [
                 "display": "none",
                 "readOnly": false,
                 "type": "text"
+            },{
+                "name": "join.secondary.where",
+                "text": "join的条件",
+                "defaultValue": "",
+                "required": true,
+                "paramsDesc": "join的条件",
+                "desc": " ",
+                "display": "none",
+                "readOnly": false,
+                "type": "text"
             }, {
-                "name": "join.*.type",
+                "name": "join.secondary.type",
                 "text": "关联类型",
                 "defaultValue": "left",
                 "required": true,
@@ -678,13 +688,14 @@ const transfrom = [
                 "desc": " ",
                 "display": "none",
                 "readOnly": false,
+                "type": "select",
                 "selectOptions": [
                     {
                         "value": "left",
                         "label": "左关联"
                     }, {
                         "value": "right",
-                        "label": "有关联"
+                        "label": "右关联"
                     }
                 ]
             },{
@@ -721,7 +732,101 @@ const transfrom = [
         content: dataJoinIcon,
         height: 90,
         width: "100%"
+    },
+    {
+        id: 'dataSelecter',
+        text: 'DataSelecter',
+        type: 'png',
+        Data: {},
+        pluginType: 'transfrom',
+        pluginName: "DataSelecter",
+        pluginOptions: [
+            {
+                "name": "name",
+                "text": "名称",
+                "defaultValue": "DataSelecter-transfrom",
+                "required": true,
+                "paramsDesc": "自定义名称, 显示用",
+                "desc": " ",
+
+                "readOnly": false,
+                "type": "text"
+            }, {
+                "name": "plugin_name",
+                "text": "插件名称",
+                "defaultValue": "DataSelecter",
+                "required": true,
+                "paramsDesc": "插件名称, 系统自带, 无需更改",
+                "desc": " ",
+                "display": "none",
+                "readOnly": true,
+                "type": "text"
+            }, {
+                "name": "select.result_table_name",
+                "text": "需要join的表",
+                "defaultValue": "",
+                "required": true,
+                "paramsDesc": "需要join的表",
+                "desc": " ",
+                "display": "none",
+                "readOnly": false,
+                "type": "text"
+            },{
+                "name": "select.1.where",
+                "text": "数据1, 的条件",
+                "defaultValue": "",
+                "required": true,
+                "paramsDesc": "数据1, 的条件",
+                "desc": " ",
+                "display": "none",
+                "readOnly": false,
+                "type": "text"
+            }, {
+                "name": "select.2.where",
+                "text": "数据2, 的条件",
+                "defaultValue": "left",
+                "required": true,
+                "paramsDesc": "数据2, 的条件",
+                "desc": " ",
+                "display": "none",
+                "readOnly": false,
+                "type": "text"
+            },{
+                "name": "parallelism",
+                "text": "并行度",
+                "defaultValue": "1",
+                "required": true,
+                "paramsDesc": "flink并行度设置, 请谨慎设置",
+                "desc": " ",
+
+                "readOnly": false,
+                "type": "digit"
+            }
+        ],
+        endpoints: [{
+            id: 'DataSelecter_result_table_name',
+            orientation: [-1, 0],
+            pos: [0, 0.5],
+            Class: BaseEndpoint,
+            color: 'system-green'
+        },{
+            id: 'DataSelecter_01_result_table_name',
+            orientation: [1, 0],
+            pos: [0, 0.5],
+            Class: BaseEndpoint,
+            color: 'system-green'
+        }, {
+            id: 'DataSelecter_02_result_table_name',
+            orientation: [1, 0],
+            pos: [0, 0.8],
+            Class: BaseEndpoint,
+            color: 'system-green'
+        }],
+        content: dataSelecterIcon,
+        height: 90,
+        width: "100%"
     }
+
 ];
 const sink = [
 

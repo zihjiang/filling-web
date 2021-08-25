@@ -16,10 +16,10 @@ class panelPlugins {
   }
 
   guid = () => {
-    function  S4() {
-       return  (((1+Math.random())*0x10000)|0).toString(16).substring(1);
+    function S4() {
+      return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
     }
-    return  (S4()+S4()+ "-" +S4());
+    return (S4() + S4() + "-" + S4());
   }
 
   addNode = (canvas, node) => {
@@ -28,17 +28,17 @@ class panelPlugins {
 
   register = (registerArray, callback) => {
     if (!_.isArray(registerArray)) {
-      console.warn('register数据必须是数组',registerArray);
-      return ;
+      console.warn('register数据必须是数组', registerArray);
+      return;
     }
 
     for (let registerData of registerArray) {
       if (!registerData.root) {
-        console.warn('register数据root字段不存在=>',registerData);
+        console.warn('register数据root字段不存在=>', registerData);
         break;
       }
       if (!registerData.canvas) {
-        console.warn('register数据canvas字段不存在=>',registerData);
+        console.warn('register数据canvas字段不存在=>', registerData);
         break;
       }
 
@@ -60,7 +60,7 @@ class panelPlugins {
         img.src = item.content;
 
         let jqImg = $(img).addClass('panel-img');
-        jqImg.on('dragstart', (e)=>{
+        jqImg.on('dragstart', (e) => {
           e.originalEvent.dataTransfer.setData('id', item.id + '-' + this.guid());
           e.originalEvent.dataTransfer.setData('originId', item.id);
           // e.originalEvent.dataTransfer.setData('data', JSON.stringify(item.Data));
@@ -69,7 +69,7 @@ class panelPlugins {
           e.originalEvent.dataTransfer.setData('pluginOptions', JSON.stringify(item['pluginOptions']));
 
           e.originalEvent.dataTransfer.setData('endpoints', JSON.stringify(item['endpoints']));
-          e.originalEvent.dataTransfer.setDragImage(img,0,0);
+          e.originalEvent.dataTransfer.setDragImage(img, 0, 0);
         })
 
         nodeItem.append(img);
@@ -83,9 +83,9 @@ class panelPlugins {
         $(registerData.canvas.root).on('dragover', (e) => {
           e.preventDefault();
         });
-  
+
         $(registerData.canvas.root).on('drop', (e) => {
-          let {clientX, clientY} = e;
+          let { clientX, clientY } = e;
           let coordinates = registerData.canvas.terminal2canvas([clientX, clientY]);
           let id = e.originalEvent.dataTransfer.getData('id');
           let content = e.originalEvent.dataTransfer.getData('originId');
@@ -111,9 +111,9 @@ class panelPlugins {
             content,
             text: text
           }
-  
+
           this.addNode(registerData.canvas, node);
-  
+
         });
       }
 
@@ -122,7 +122,7 @@ class panelPlugins {
     };
 
     if (_.isFunction(callback)) {
-     callback();
+      callback();
     }
 
   }
@@ -134,4 +134,4 @@ panelPluginsInstance.PanelNode = BaseNode;
 
 console.log(panelPluginsInstance);
 
-export  { panelPluginsInstance };
+export { panelPluginsInstance };

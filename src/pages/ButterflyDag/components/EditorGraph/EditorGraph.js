@@ -16,7 +16,6 @@ class EditorGraph extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      initValue: '1'
     }
   }
   
@@ -107,23 +106,23 @@ class EditorGraph extends Component {
 
 
     
-    HotKeyPlugin.register({
-      canvas: this.canvas,
-      root:document,
-      config:[{
-        key: "delete",
-        handler: () => {
-          let selectNodeOrEdge = window.selectNodeOrEdge;
-          if(selectNodeOrEdge != undefined && selectNodeOrEdge['id'] ) {
-            if(selectNodeOrEdge.type == 'endpoint') {
-              this.canvas.removeEdge(selectNodeOrEdge['id']);
-            } else {
-              this.canvas.removeNode(selectNodeOrEdge['id']);
-            }
-          }
-        }
-      }]
-    })
+    // HotKeyPlugin.register({
+    //   canvas: this.canvas,
+    //   root:document,
+    //   config:[{
+    //     key: "delete",
+    //     handler: () => {
+    //       let selectNodeOrEdge = window.selectNodeOrEdge;
+    //       if(selectNodeOrEdge != undefined && selectNodeOrEdge['id'] ) {
+    //         if(selectNodeOrEdge.type == 'endpoint') {
+    //           this.canvas.removeEdge(selectNodeOrEdge['id']);
+    //         } else {
+    //           this.canvas.removeNode(selectNodeOrEdge['id']);
+    //         }
+    //       }
+    //     }
+    //   }]
+    // })
     window.canvas = this.canvas;
   }
 
@@ -142,10 +141,10 @@ class EditorGraph extends Component {
     return (
       <div className='litegraph-page'>
         <div className='litegraph-canvas' id='dag-canvas'></div>
-                {/* 弹出 */}
           <div id="ParamsFrom">
             <ParamsFrom />
           </div>
+          <input />
       </div>
     );
   }
