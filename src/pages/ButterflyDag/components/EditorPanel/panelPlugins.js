@@ -63,7 +63,7 @@ class panelPlugins {
         jqImg.on('dragstart', (e) => {
           e.originalEvent.dataTransfer.setData('id', item.id + '-' + this.guid());
           e.originalEvent.dataTransfer.setData('originId', item.id);
-          // e.originalEvent.dataTransfer.setData('data', JSON.stringify(item.Data));
+          // e.originalEvent.dataTransfer.setData('data', JSON.stringify(item.data));
           e.originalEvent.dataTransfer.setData('pluginType', item['pluginType']);
           e.originalEvent.dataTransfer.setData('pluginName', item['pluginName']);
           e.originalEvent.dataTransfer.setData('pluginOptions', JSON.stringify(item['pluginOptions']));
@@ -105,10 +105,11 @@ class panelPlugins {
             Class: BaseNode,
             pluginName: pluginName,
             pluginOptions: pluginOptions,
-            // Data: data,
+            // data: data,
             PluginType: PluginType,
             endpoints: endpoints,
             content,
+            ddd: '111',
             text: text
           }
 

@@ -6,6 +6,7 @@ import enbase64Icon from './images/enbase64.png';
 import debase64Icon from './images/debase64.png';
 import dataJoinIcon from './images/dataJoin.png';
 import dataSelecterIcon from './images/dataSelecter.png';
+import devIcon from './images/dev.png';
 
 import BaseEndpoint from '../EditorGraph/endpoint';
 
@@ -761,16 +762,6 @@ const transfrom = [
                 "display": "none",
                 "readOnly": true,
                 "type": "text"
-            }, {
-                "name": "select.result_table_name",
-                "text": "需要join的表",
-                "defaultValue": "",
-                "required": true,
-                "paramsDesc": "需要join的表",
-                "desc": " ",
-                "display": "none",
-                "readOnly": false,
-                "type": "text"
             },{
                 "name": "select.1.where",
                 "text": "数据1, 的条件",
@@ -784,7 +775,7 @@ const transfrom = [
             }, {
                 "name": "select.2.where",
                 "text": "数据2, 的条件",
-                "defaultValue": "left",
+                "defaultValue": "",
                 "required": true,
                 "paramsDesc": "数据2, 的条件",
                 "desc": " ",
@@ -829,6 +820,57 @@ const transfrom = [
 
 ];
 const sink = [
+    {
+        id: 'ConsoleSink',
+        text: 'ConsoleSink',
+        type: 'png',
+        Data: {},
+        pluginType: 'sink',
+        pluginName: "ConsoleSink",
+        pluginOptions: [
+            {
+                "name": "name",
+                "text": "名称",
+                "defaultValue": "Console-sink",
+                "required": true,
+                "paramsDesc": "自定义名称, 显示用",
+                "desc": " ",
+
+                "readOnly": false,
+                "type": "text"
+            }, {
+                "name": "plugin_name",
+                "text": "插件名称",
+                "defaultValue": "ConsoleSink",
+                "required": true,
+                "paramsDesc": "插件名称, 系统自带, 无需更改",
+                "desc": " ",
+                "display": "none",
+                "readOnly": true,
+                "type": "text"
+            },{
+                "name": "parallelism",
+                "text": "并行度",
+                "defaultValue": "1",
+                "required": true,
+                "paramsDesc": "flink并行度设置, 请谨慎设置",
+                "desc": " ",
+
+                "readOnly": false,
+                "type": "digit"
+            }
+        ],
+        endpoints: [{
+            id: 'Console_source_table_name',
+            orientation: [-1, 0],
+            pos: [0, 0.5],
+            Class: BaseEndpoint,
+            color: 'system-green'
+        }],
+        content: devIcon,
+        height: 90,
+        width: "100%"
+    }
 
 ];
 
