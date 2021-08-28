@@ -668,7 +668,7 @@ const transfrom = [
                 "paramsDesc": "需要join的表",
                 "desc": " ",
                 "display": "none",
-                "readOnly": false,
+                "readOnly": true,
                 "type": "text"
             },{
                 "name": "join.secondary.where",
@@ -712,13 +712,13 @@ const transfrom = [
             }
         ],
         endpoints: [{
-            id: 'DataJoin_join01_result_table_name',
+            id: 'DataJoin_result_table_name',
             orientation: [-1, 0],
             pos: [0, 0.5],
             Class: BaseEndpoint,
             color: 'system-green'
         },{
-            id: 'DataJoin_join02_result_table_name',
+            id: 'DataJoin_join_result_table_name',
             orientation: [-1, 0],
             pos: [0, 0.8],
             Class: BaseEndpoint,
@@ -763,25 +763,26 @@ const transfrom = [
                 "readOnly": true,
                 "type": "text"
             },{
-                "name": "select.1.where",
-                "text": "数据1, 的条件",
+                "name": "select.result_table_name",
+                "text": "生成的流",
+                "defaultValue": ["t1","t2"],
+                "required": true,
+                "paramsDesc": "生成的流",
+                "desc": " ",
+                "display": "none",
+                "readOnly": true,
+                "type": "array"
+            },{
+                "name": "select.{}.where",
+                "text": "数据{}, 的条件",
                 "defaultValue": "",
                 "required": true,
-                "paramsDesc": "数据1, 的条件",
+                "paramsDesc": "数据{}, 的条件",
                 "desc": " ",
                 "display": "none",
                 "readOnly": false,
-                "type": "text"
-            }, {
-                "name": "select.2.where",
-                "text": "数据2, 的条件",
-                "defaultValue": "",
-                "required": true,
-                "paramsDesc": "数据2, 的条件",
-                "desc": " ",
-                "display": "none",
-                "readOnly": false,
-                "type": "text"
+                "type": "child",
+                "father": "select.result_table_name"
             },{
                 "name": "parallelism",
                 "text": "并行度",
@@ -801,13 +802,13 @@ const transfrom = [
             Class: BaseEndpoint,
             color: 'system-green'
         },{
-            id: 'DataSelecter_01_result_table_name',
+            id: 'DataSelecter_t1_result_table_name',
             orientation: [1, 0],
             pos: [0, 0.5],
             Class: BaseEndpoint,
             color: 'system-green'
         }, {
-            id: 'DataSelecter_02_result_table_name',
+            id: 'DataSelecter_t2_result_table_name',
             orientation: [1, 0],
             pos: [0, 0.8],
             Class: BaseEndpoint,

@@ -1,5 +1,5 @@
-import React, {Component} from 'react';
-import {Canvas} from 'butterfly-dag';
+import React, { Component } from 'react';
+import { Canvas } from 'butterfly-dag';
 
 import 'butterfly-dag/dist/index.css';
 import './index.less';
@@ -18,7 +18,86 @@ class EditorGraph extends Component {
     this.state = {
     }
   }
-  
+
+  // 为每个算子添加source_table_name和target_table_name
+  addSourceAndTarget = (sourceNode, targetNode, edge) => {
+
+
+    console.log("edge--------", edge);
+
+    if (sourceNode.options.data == undefined) {
+      // init data
+      sourceNode.options.data = {};
+      const pluginOptions = JSON.parse(sourceNode.options.pluginOptions);
+      for (let i = 0; i < pluginOptions.length; i++) {
+        let option = pluginOptions[i];
+
+        sourceNode.options.data[option.name] = option.defaultValue;
+      }
+
+      // 默认以node id为target_table_name
+      if (sourceNode.options.pluginName != 'sink')
+        sourceNode.options.data['target_table_name'] = sourceNode.id;
+      }
+
+      
+    if (targetNode.options.data == undefined) {
+      // init data
+      targetNode.options.data = {};
+      const pluginOptions = JSON.parse(targetNode.options.pluginOptions);
+      for (let i = 0; i < pluginOptions.length; i++) {
+        let option = pluginOptions[i];
+
+        targetNode.options.data[option.name] = option.defaultValue;
+      }
+
+      // 默认以node id为target_table_name
+      if (targetNode.options.PluginType != 'sink')
+        targetNode.options.data['target_table_name'] = targetNode.id;
+    }
+
+    // 当选择datajoin第二根线的时候
+      if (edge.targetEndpoint.id == 'DataJoin_join_result_table_name') {
+
+        targetNode.options.data['join.source_table_name'] = sourceNode.id;
+      }
+
+        // pluginName为DataSelecter时, 特殊处理
+        if(sourceNode.options.pluginName == 'DataSelecter') {
+
+              // 当选择dataSelecter第一根线的时候
+            if (edge.sourceEndpoint.id == 'DataSelecter_t1_result_table_name') {
+
+              targetNode.options.data['source_table_name'] = sourceNode.id+'t1';
+
+              sourceNode.options.data['select.' + sourceNode.id+'t1' + '.where'] = sourceNode.options.data['select.t1.where'];
+
+
+              sourceNode.options.data['select.result_table_name'][0] = sourceNode.id+'t1';
+            }
+
+            // 当选择dataSelecter第一根线的时候
+            if (edge.sourceEndpoint.id == 'DataSelecter_t2_result_table_name') {
+
+              targetNode.options.data['source_table_name'] = sourceNode.id+'t2';
+
+              sourceNode.options.data['select.' + sourceNode.id+'t2' + '.where'] = sourceNode.options.data['select.t2.where'];
+
+              sourceNode.options.data['select.result_table_name'][1] = sourceNode.id+'t2';
+        }
+        }
+      
+
+    console.log('sourceNode', sourceNode);
+    console.log('targetNode', targetNode);
+
+    _.map(window.canvas.nodes, (d) => { if (d.id == sourceNode.id) d = sourceNode; if (d.id == targetNode.id) d = targetNode  });
+
+
+
+    // _.map(window.canvas.nodes, (d) => { if (d.id == sourceNode.id) { d = sourceNode } if (d.id == targetNode.id) { d = targetNode } });
+
+  }
   componentDidMount() {
     const data = this.props.data;
 
@@ -41,7 +120,17 @@ class EditorGraph extends Component {
           shapeType: "AdvancedBezier",
           Class: BaseEdge,
           defaultAnimate: true//默认开启线条动画
-        }
+        },
+        endpoint: {
+          position: [],        //限制锚点位置['Top', 'Bottom', 'Left', 'Right'],
+          linkableHighlight: true,//连线时会触发point.linkable的方法，可做高亮
+          expandArea: {        //锚点过小时，可扩大连线热区
+            left: 10,
+            right: 10,
+            top: 10,
+            botton: 10
+          }
+        },
       }
     });
     this.canvas.draw(data, () => {
@@ -61,39 +150,41 @@ class EditorGraph extends Component {
     this.canvas.on('system.link.connect', (data) => {
 
       console.log(data);
-      if(data != null) {
-        for(let i=0;i<data.links.length; i++) {
+      if (data != null) {
+        for (let i = 0; i < data.links.length; i++) {
           const edge = data.links[i];
           const edgeId = edge.id;
           const sourceNode = edge.sourceNode;
           const targetNode = edge.targetNode;
 
           const targetEndpoint = edge.targetEndpoint;
-  
+
           console.log(targetNode.options);
-          if(targetNode.options['PluginType'] == "source") {
+          if (targetNode.options['PluginType'] == "source") {
             this.openNotification("warning", "提示", "任何情况下, 源都不准被允许放在箭头后面");
             this.canvas.removeEdge(edgeId);
-          }  
-          if(sourceNode.options['PluginType'] == "sink") {
+          } else if (sourceNode.options['PluginType'] == "sink") {
             this.openNotification("warning", "提示", "任何情况下, 源目标都不准被允许放在箭头前面");
             this.canvas.removeEdge(edgeId);
-          }  
-          if(_.difference(edge.sourceEndpoint.orientation, [-1, 0]).length == 0) {
+          } else if (_.difference(edge.sourceEndpoint.orientation, [-1, 0]).length == 0) {
             this.openNotification("warning", "提示", "任何情况下, 源目标都不准连在前面");
             this.canvas.removeEdge(edgeId);
-          }  
-          if(targetNode.options['id'] == sourceNode.options['id']) {
+          } else if (targetNode.options['id'] == sourceNode.options['id']) {
             this.openNotification("warning", "提示", "连线前后的算子不可一致");
             this.canvas.removeEdge(edgeId);
-          }  
-          if(_.filter(this.canvas.edges, (d) => {return d.targetEndpoint.nodeId == targetEndpoint.nodeId}).length >1 ) {
-            // 只有在pluginName不等于DataJoin的时候才触发
-            if(targetNode.options.pluginName != "DataJoin") {
-              this.openNotification("warning", "提示", "同一个算子下同一个连接点的输入, 不能有两个");
-              this.canvas.removeEdge(edgeId);
-            }
-          }  
+
+
+          // 只有在pluginName不等于DataJoin的时候才触发
+          } else if (_.filter(this.canvas.edges, (d) => { return d.targetEndpoint.nodeId == targetEndpoint.nodeId }).length > 1 && targetNode.options.pluginName != "DataJoin") {
+            
+            this.openNotification("warning", "提示", "同一个算子下同一个连接点的输入, 不能有两个");
+            this.canvas.removeEdge(edgeId);
+          } else {
+
+            console.log("正常操作");
+            // let 
+            this.addSourceAndTarget(window.canvas.getNode(sourceNode.id), window.canvas.getNode(targetNode.id), edge);
+          }
         }
       }
     });
@@ -104,25 +195,6 @@ class EditorGraph extends Component {
       console.log(data);
     })
 
-
-    
-    // HotKeyPlugin.register({
-    //   canvas: this.canvas,
-    //   root:document,
-    //   config:[{
-    //     key: "delete",
-    //     handler: () => {
-    //       let selectNodeOrEdge = window.selectNodeOrEdge;
-    //       if(selectNodeOrEdge != undefined && selectNodeOrEdge['id'] ) {
-    //         if(selectNodeOrEdge.type == 'endpoint') {
-    //           this.canvas.removeEdge(selectNodeOrEdge['id']);
-    //         } else {
-    //           this.canvas.removeNode(selectNodeOrEdge['id']);
-    //         }
-    //       }
-    //     }
-    //   }]
-    // })
     window.canvas = this.canvas;
   }
 
@@ -135,16 +207,16 @@ class EditorGraph extends Component {
         console.log('Notification Clicked!');
       },
     });
-  };  
+  };
 
   render() {
     return (
       <div className='litegraph-page'>
         <div className='litegraph-canvas' id='dag-canvas'></div>
-          <div id="ParamsFrom">
-            <ParamsFrom />
-          </div>
-          <input />
+        <div id="ParamsFrom">
+          <ParamsFrom />
+        </div>
+        <input />
       </div>
     );
   }

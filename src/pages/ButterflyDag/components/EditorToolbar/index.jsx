@@ -12,6 +12,7 @@ import {
 import React, { Component } from 'react';
 import './index.less';
 
+
 class EditorToolbar extends Component {
     constructor(props) {
         super(props);
@@ -59,7 +60,52 @@ class EditorToolbar extends Component {
 
     debugMode = () => {
         const data = window.canvas.getDataMap();
-        console.log(data);
+        console.log(JSON.stringify(this.deCodeDataMap(data)));
+    }
+
+    // 把canvas对象data换成能序列化的对象
+    deCodeDataMap = (dataMap) => {
+        let result = {
+            nodes: [],
+            edges: []
+        };
+        const {nodes, edges} = dataMap;
+        // node
+        // const nodeClass = Class;
+        for(let i=0; i< nodes.length; i++) {
+            const node = nodes[i];
+            let _endpoints = [];
+            const {id, data, top, width, left, height, options, endpoints} = node;
+            for(let j=0; j< endpoints.length; j++) {
+                const endpoint = endpoints[j];
+                const {id, orientation, pos} = endpoint;
+                _endpoints.push({id, orientation, pos});
+            }
+            const _node = {id, data, top, width, left, height};
+            _node['endpoints'] = _endpoints;
+
+            _node['pluginOptions'] = options.pluginOptions;
+            _node['PluginType'] = options.PluginType;
+            _node['pluginName'] = options.pluginName;
+            _node['data'] = options.data;
+            _node['text'] = options.text;
+            // _node['data'] = options.data;
+            result.nodes.push(_node);
+        }
+        // edges
+        for(let i=0; i< edges.length; i++) {
+            const edge = edges[i];
+            const {id, source, target, sourceEndpoint, targetEndpoint, sourceNode, targetNode, type} = edge;
+            const _edge = {id, source, target, type};
+            _edge.source = sourceEndpoint.id;
+            _edge.target = targetEndpoint.id;
+
+            _edge.sourceNode = sourceNode.id;
+            _edge.targetNode = targetNode.id;
+            result.edges.push(_edge);
+        }
+
+        return result;
     }
 
     render() {

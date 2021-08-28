@@ -1,7 +1,6 @@
 import React, { useRef, Component, useState } from 'react';
-import { Button, message } from 'antd';
-import $ from 'jquery';
-import ProForm, {
+import { Button, message, Select } from 'antd';
+import {
   DrawerForm,
   ProFormText,
   ProFormTextArea,
@@ -35,19 +34,57 @@ class ParamsFrom extends Component {
 
 
     this.setState({
-      data: window.canvas.getNode(window.selectNode.id).data,
+
+      data: window.canvas.getNode(window.selectNode.id).data == undefined ? window.canvas.getNode(window.selectNode.id).options.data : window.canvas.getNode(window.selectNode.id).data,
       pluginName: window.selectNode.options.pluginName,
       pluginOptions: JSON.parse(window.selectNode.options.pluginOptions)
     });
-    console.log("window.selectNode: ", window.selectNode);
   }
 
+  // 更新node的数据
   updateData = (values) => {
 
-    console.log(window.selectNode.id);
-    _.map(window.canvas.nodes, (d) => { if (d.id == window.selectNode.id) d.data = values });
+    _.map(window.canvas.nodes, (d) => { if (d.id == window.selectNode.id) d.options.data = values });
+  }
 
-    console.log(values);
+  _forceUpdate = (values) => {
+
+    // this.state.initialValues.map((item) => {
+
+    //   if(item.name == Object.keys(values)[0]) {
+    //     item.defaultValue = Object.values(values)[0];
+    //   }
+    // })
+
+    let initialValues01 = this.state.initialValues;
+    let pluginOptions01 = this.state.pluginOptions;
+
+    console.log('values', values);
+
+    console.log('values', Object.keys(values)[0]);
+    console.log('values', Object.values(values)[0]);
+
+    initialValues01[Object.keys(values)[0]] = Object.values(values)[0];
+
+    console.log(initialValues01['select.result_table_name']);
+
+
+    pluginOptions01.map((item) => {
+
+      if(item.name == Object.keys(values)[0]) {
+        item.defaultValue = Object.values(values)[0];
+      }
+    })
+
+    console.log(pluginOptions01);
+
+    this.setState({
+      initialValues: initialValues01,
+      pluginOptions: pluginOptions01
+    })
+
+    
+    
   }
 
 
@@ -57,7 +94,6 @@ class ParamsFrom extends Component {
     let data = this.state.data;
 
     if (pluginOptions) {
-      console.log(this.state.data);
       if (this.state.data != undefined) {
         // 编辑
         initialValues = data;
@@ -94,6 +130,7 @@ class ParamsFrom extends Component {
           }}
           width='20%'
           initialValues={initialValues}
+          onValuesChange={(value) => this._forceUpdate(value)}
         >
 
           {
@@ -151,15 +188,31 @@ class ParamsFrom extends Component {
                   </ProFormSelect>
 
                 case "array":
-                  return <ProFormTextArea
+                  return <ProFormSelect
                     key={idx}
+                    mode="tags"
                     name={item.name}
                     abel={item.text}
                     placeholder={item.paramsDesc}
                     style={{ display: item.display }}
-                    disabled={item.readOnly}
+                    // disabled={item.readOnly}
                     options={item.selectOptions}>
-                  </ProFormTextArea>
+
+                  </ProFormSelect>
+                  
+                case "child":
+                  return (_.find(this.state.pluginOptions, (d) => { return d.name==item.father}) || []).defaultValue.map((_item, _idx) => {
+                    return  <ProFormText
+                      key={idx+_idx}
+                      name={item.name.replace("{}", _item)}
+                      abel={item.text}
+                      placeholder={item.paramsDesc.replace("{}", _item)}
+                      style={{ display: item.display }}
+                      disabled={item.readOnly}
+                      onValuesChange={this._forceUpdate}
+                      options={item.selectOptions}>
+                    </ProFormText>
+                  })
               }
             })
           }

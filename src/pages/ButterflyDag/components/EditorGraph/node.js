@@ -45,6 +45,7 @@ class BaseNode extends Node {
 
 
     $(container).on('dblclick', () => {
+
       // paramsFrom
       window.selectNode = data;
       window.selectNodeOrEdge = data;

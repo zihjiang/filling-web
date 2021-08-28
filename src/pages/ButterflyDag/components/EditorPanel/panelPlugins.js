@@ -109,7 +109,6 @@ class panelPlugins {
             PluginType: PluginType,
             endpoints: endpoints,
             content,
-            ddd: '111',
             text: text
           }
 
