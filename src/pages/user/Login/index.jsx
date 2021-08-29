@@ -36,6 +36,7 @@ const Login = () => {
   const fetchUserInfo = async () => {
     const userInfo = await initialState?.fetchUserInfo?.();
 
+    console.log(userInfo);
     if (userInfo) {
       await setInitialState((s) => ({ ...s, currentUser: userInfo }));
     }
@@ -48,7 +49,8 @@ const Login = () => {
       // 登录
       const msg = await login({ ...values, type });
 
-      if (msg.status === 'ok') {
+      if (msg.id_token) {
+        localStorage.setItem("id_token", msg.id_token);
         const defaultLoginSuccessMessage = intl.formatMessage({
           id: 'pages.login.success',
           defaultMessage: '登录成功！',

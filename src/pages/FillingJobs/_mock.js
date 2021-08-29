@@ -1,7 +1,7 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
-import moment from 'moment';
-import { parse } from 'url'; // mock tableListDataSource
+import { parse } from 'url';
 
+// mock tableListDataSource
 const genList = (current, pageSize) => {
   const tableListDataSource = [];
 
@@ -19,9 +19,9 @@ const genList = (current, pageSize) => {
       owner: '曲丽丽',
       desc: '这是一段描述',
       callNo: Math.floor(Math.random() * 1000),
-      status: Math.floor(Math.random() * 10) % 4,
-      updatedAt: moment().format('YYYY-MM-DD'),
-      createdAt: moment().format('YYYY-MM-DD'),
+      status: (Math.floor(Math.random() * 10) % 4).toString(),
+      updatedAt: new Date(),
+      createdAt: new Date(),
       progress: Math.ceil(Math.random() * 100),
     });
   }
@@ -42,9 +42,9 @@ function getRule(req, res, u) {
   const { current = 1, pageSize = 10 } = req.query;
   const params = parse(realUrl, true).query;
   let dataSource = [...tableListDataSource].slice((current - 1) * pageSize, current * pageSize);
+  const sorter = JSON.parse(params.sorter);
 
-  if (params.sorter) {
-    const sorter = JSON.parse(params.sorter);
+  if (sorter) {
     dataSource = dataSource.sort((prev, next) => {
       let sortNumber = 0;
       Object.keys(sorter).forEach((key) => {
@@ -89,15 +89,21 @@ function getRule(req, res, u) {
   }
 
   if (params.name) {
-    dataSource = dataSource.filter((data) => data?.name?.includes(params.name || ''));
+    dataSource = dataSource.filter((data) => data.name.includes(params.name || ''));
+  }
+
+  let finalPageSize = 10;
+
+  if (params.pageSize) {
+    finalPageSize = parseInt(`${params.pageSize}`, 10);
   }
 
   const result = {
     data: dataSource,
     total: tableListDataSource.length,
     success: true,
-    pageSize,
-    current: parseInt(`${params.current}`, 10) || 1,
+    pageSize: finalPageSize,
+    current: parseInt(`${params.currentPage}`, 10) || 1,
   };
   return res.json(result);
 }
@@ -132,9 +138,9 @@ function postRule(req, res, u, b) {
           owner: '曲丽丽',
           desc,
           callNo: Math.floor(Math.random() * 1000),
-          status: Math.floor(Math.random() * 10) % 2,
-          updatedAt: moment().format('YYYY-MM-DD'),
-          createdAt: moment().format('YYYY-MM-DD'),
+          status: (Math.floor(Math.random() * 10) % 2).toString(),
+          updatedAt: new Date(),
+          createdAt: new Date(),
           progress: Math.ceil(Math.random() * 100),
         };
         tableListDataSource.unshift(newRule);

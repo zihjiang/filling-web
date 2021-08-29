@@ -1,42 +1,40 @@
 import { PlusOutlined } from '@ant-design/icons';
 import { Button, message, Input, Drawer } from 'antd';
 import React, { useState, useRef } from 'react';
-import { useIntl, FormattedMessage } from 'umi';
 import { PageContainer, FooterToolbar } from '@ant-design/pro-layout';
 import ProTable from '@ant-design/pro-table';
 import { ModalForm, ProFormText, ProFormTextArea } from '@ant-design/pro-form';
 import ProDescriptions from '@ant-design/pro-descriptions';
 import UpdateForm from './components/UpdateForm';
-import { rule, addRule, updateRule, removeRule } from '@/services/ant-design-pro/api';
+import { rule, addRule, updateRule, removeRule } from './service';
+
 /**
- * @en-US Add node
- * @zh-CN 添加节点
+ * 添加节点
+ *
  * @param fields
  */
-
 const handleAdd = async (fields) => {
   const hide = message.loading('正在添加');
 
   try {
     await addRule({ ...fields });
     hide();
-    message.success('Added successfully');
+    message.success('添加成功');
     return true;
   } catch (error) {
     hide();
-    message.error('Adding failed, please try again!');
+    message.error('添加失败请重试！');
     return false;
   }
 };
 /**
- * @en-US Update node
- * @zh-CN 更新节点
+ * 更新节点
  *
  * @param fields
  */
 
 const handleUpdate = async (fields) => {
-  const hide = message.loading('Configuring');
+  const hide = message.loading('正在配置');
 
   try {
     await updateRule({
@@ -45,17 +43,16 @@ const handleUpdate = async (fields) => {
       key: fields.key,
     });
     hide();
-    message.success('Configuration is successful');
+    message.success('配置成功');
     return true;
   } catch (error) {
     hide();
-    message.error('Configuration failed, please try again!');
+    message.error('配置失败请重试！');
     return false;
   }
 };
 /**
- *  Delete node
- * @zh-CN 删除节点
+ * 删除节点
  *
  * @param selectedRows
  */
@@ -69,47 +66,32 @@ const handleRemove = async (selectedRows) => {
       key: selectedRows.map((row) => row.key),
     });
     hide();
-    message.success('Deleted successfully and will refresh soon');
+    message.success('删除成功，即将刷新');
     return true;
   } catch (error) {
     hide();
-    message.error('Delete failed, please try again');
+    message.error('删除失败，请重试');
     return false;
   }
 };
 
 const TableList = () => {
-  /**
-   * @en-US Pop-up window of new window
-   * @zh-CN 新建窗口的弹窗
-   *  */
+  /** 新建窗口的弹窗 */
   const [createModalVisible, handleModalVisible] = useState(false);
-  /**
-   * @en-US The pop-up window of the distribution update window
-   * @zh-CN 分布更新窗口的弹窗
-   * */
+  /** 分布更新窗口的弹窗 */
 
   const [updateModalVisible, handleUpdateModalVisible] = useState(false);
   const [showDetail, setShowDetail] = useState(false);
   const actionRef = useRef();
   const [currentRow, setCurrentRow] = useState();
   const [selectedRowsState, setSelectedRows] = useState([]);
-  /**
-   * @en-US International configuration
-   * @zh-CN 国际化配置
-   * */
+  /** 国际化配置 */
 
-  const intl = useIntl();
   const columns = [
     {
-      title: (
-        <FormattedMessage
-          id="pages.searchTable.updateForm.ruleName.nameLabel"
-          defaultMessage="Rule name"
-        />
-      ),
+      title: '规则名称',
       dataIndex: 'name',
-      tip: 'The rule name is the unique key',
+      tip: '规则名称是唯一的 key',
       render: (dom, entity) => {
         return (
           <a
@@ -124,70 +106,42 @@ const TableList = () => {
       },
     },
     {
-      title: <FormattedMessage id="pages.searchTable.titleDesc" defaultMessage="Description" />,
+      title: '描述',
       dataIndex: 'desc',
       valueType: 'textarea',
     },
     {
-      title: (
-        <FormattedMessage
-          id="pages.searchTable.titleCallNo"
-          defaultMessage="Number of service calls"
-        />
-      ),
+      title: '服务调用次数',
       dataIndex: 'callNo',
       sorter: true,
       hideInForm: true,
-      renderText: (val) =>
-        `${val}${intl.formatMessage({
-          id: 'pages.searchTable.tenThousand',
-          defaultMessage: ' 万 ',
-        })}`,
+      renderText: (val) => `${val}万`,
     },
     {
-      title: <FormattedMessage id="pages.searchTable.titleStatus" defaultMessage="Status" />,
+      title: '状态',
       dataIndex: 'status',
       hideInForm: true,
       valueEnum: {
         0: {
-          text: (
-            <FormattedMessage
-              id="pages.searchTable.nameStatus.default"
-              defaultMessage="Shut down"
-            />
-          ),
+          text: '关闭',
           status: 'Default',
         },
         1: {
-          text: (
-            <FormattedMessage id="pages.searchTable.nameStatus.running" defaultMessage="Running" />
-          ),
+          text: '运行中',
           status: 'Processing',
         },
         2: {
-          text: (
-            <FormattedMessage id="pages.searchTable.nameStatus.online" defaultMessage="Online" />
-          ),
+          text: '已上线',
           status: 'Success',
         },
         3: {
-          text: (
-            <FormattedMessage
-              id="pages.searchTable.nameStatus.abnormal"
-              defaultMessage="Abnormal"
-            />
-          ),
+          text: '异常',
           status: 'Error',
         },
       },
     },
     {
-      title: (
-        <FormattedMessage
-          id="pages.searchTable.titleUpdatedAt"
-          defaultMessage="Last scheduled time"
-        />
-      ),
+      title: '上次调度时间',
       sorter: true,
       dataIndex: 'updatedAt',
       valueType: 'dateTime',
@@ -199,22 +153,14 @@ const TableList = () => {
         }
 
         if (`${status}` === '3') {
-          return (
-            <Input
-              {...rest}
-              placeholder={intl.formatMessage({
-                id: 'pages.searchTable.exception',
-                defaultMessage: 'Please enter the reason for the exception!',
-              })}
-            />
-          );
+          return <Input {...rest} placeholder="请输入异常原因！" />;
         }
 
         return defaultRender(item);
       },
     },
     {
-      title: <FormattedMessage id="pages.searchTable.titleOption" defaultMessage="Operating" />,
+      title: '操作',
       dataIndex: 'option',
       valueType: 'option',
       render: (_, record) => [
@@ -225,13 +171,10 @@ const TableList = () => {
             setCurrentRow(record);
           }}
         >
-          <FormattedMessage id="pages.searchTable.config" defaultMessage="Configuration" />
+          配置
         </a>,
         <a key="subscribeAlert" href="https://procomponents.ant.design/">
-          <FormattedMessage
-            id="pages.searchTable.subscribeAlert"
-            defaultMessage="Subscribe to alerts"
-          />
+          订阅警报
         </a>,
       ],
     },
@@ -239,10 +182,7 @@ const TableList = () => {
   return (
     <PageContainer>
       <ProTable
-        headerTitle={intl.formatMessage({
-          id: 'pages.searchTable.title',
-          defaultMessage: 'Enquiry form',
-        })}
+        headerTitle="查询表格"
         actionRef={actionRef}
         rowKey="key"
         search={{
@@ -256,7 +196,7 @@ const TableList = () => {
               handleModalVisible(true);
             }}
           >
-            <PlusOutlined /> <FormattedMessage id="pages.searchTable.new" defaultMessage="New" />
+            <PlusOutlined /> 新建
           </Button>,
         ]}
         request={rule}
@@ -271,7 +211,7 @@ const TableList = () => {
         <FooterToolbar
           extra={
             <div>
-              <FormattedMessage id="pages.searchTable.chosen" defaultMessage="Chosen" />{' '}
+              已选择{' '}
               <a
                 style={{
                   fontWeight: 600,
@@ -279,15 +219,9 @@ const TableList = () => {
               >
                 {selectedRowsState.length}
               </a>{' '}
-              <FormattedMessage id="pages.searchTable.item" defaultMessage="项" />
-              &nbsp;&nbsp;
+              项 &nbsp;&nbsp;
               <span>
-                <FormattedMessage
-                  id="pages.searchTable.totalServiceCalls"
-                  defaultMessage="Total number of service calls"
-                />{' '}
-                {selectedRowsState.reduce((pre, item) => pre + item.callNo, 0)}{' '}
-                <FormattedMessage id="pages.searchTable.tenThousand" defaultMessage="万" />
+                服务调用次数总计 {selectedRowsState.reduce((pre, item) => pre + item.callNo, 0)} 万
               </span>
             </div>
           }
@@ -299,24 +233,13 @@ const TableList = () => {
               actionRef.current?.reloadAndRest?.();
             }}
           >
-            <FormattedMessage
-              id="pages.searchTable.batchDeletion"
-              defaultMessage="Batch deletion"
-            />
+            批量删除
           </Button>
-          <Button type="primary">
-            <FormattedMessage
-              id="pages.searchTable.batchApproval"
-              defaultMessage="Batch approval"
-            />
-          </Button>
+          <Button type="primary">批量审批</Button>
         </FooterToolbar>
       )}
       <ModalForm
-        title={intl.formatMessage({
-          id: 'pages.searchTable.createForm.newRule',
-          defaultMessage: 'New rule',
-        })}
+        title="新建规则"
         width="400px"
         visible={createModalVisible}
         onVisibleChange={handleModalVisible}
@@ -336,12 +259,7 @@ const TableList = () => {
           rules={[
             {
               required: true,
-              message: (
-                <FormattedMessage
-                  id="pages.searchTable.ruleName"
-                  defaultMessage="Rule name is required"
-                />
-              ),
+              message: '规则名称为必填项',
             },
           ]}
           width="md"
@@ -364,10 +282,7 @@ const TableList = () => {
         }}
         onCancel={() => {
           handleUpdateModalVisible(false);
-
-          if (!showDetail) {
-            setCurrentRow(undefined);
-          }
+          setCurrentRow(undefined);
         }}
         updateModalVisible={updateModalVisible}
         values={currentRow || {}}

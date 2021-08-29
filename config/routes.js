@@ -43,26 +43,26 @@ export default [
     ],
   },
   {
-    name: 'list.table-list',
-    icon: 'table',
-    path: '/list',
-    component: './TableList',
-  },
-  {
     path: '/',
     redirect: '/welcome',
   },
   {
-    name: '流程编辑器',
+    name: '任务列表',
     icon: 'smile',
-    path: '/editorflow',
-    component: './EditorFlow',
+    path: '/fillingjobs',
+    component: './FillingJobs',
   },
   {
-    name: '空白页面',
+    name: '编辑任务',
     icon: 'smile',
     path: '/butterfly-dag',
     component: './ButterflyDag',
+  },
+  {
+    name: '查询表格',
+    icon: 'smile',
+    path: '/listtablelist',
+    component: './ListTableList',
   },
   {
     component: './404',
