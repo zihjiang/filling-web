@@ -7,7 +7,8 @@ import {
     BugFilled,
     CheckCircleFilled,
     ZoomOutOutlined,
-    ZoomInOutlined
+    ZoomInOutlined,
+    SaveFilled
 } from '@ant-design/icons';
 import React, { Component } from 'react';
 import './index.less';
@@ -60,7 +61,7 @@ class EditorToolbar extends Component {
 
     debugMode = () => {
         const data = window.canvas.getDataMap();
-        console.log(JSON.stringify(this.deCodeDataMap(data)));
+        console.log(this.deCodeDataMap(data));
     }
 
     // 把canvas对象data换成能序列化的对象
@@ -118,6 +119,7 @@ class EditorToolbar extends Component {
                 <ZoomInOutlined onClick={this.zoomIn} title="放大" />
                 <ZoomOutOutlined onClick={this.zoomInOut} title="缩小" />
                 <BugFilled title="调试" onClick={this.debugMode} />
+                <SaveFilled title="保存" onClick={this.debugMode}/>
                 <CheckCircleFilled title="检查" />
                 <PlayCircleFilled title="启动" />
             </div>

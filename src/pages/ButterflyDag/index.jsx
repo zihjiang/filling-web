@@ -33,7 +33,7 @@ class EditorFlow extends Component {
       <PageContainer content="这是一个新页面，从这里进行开发！" className={styles.main}>
         <div className={styles.editor}>
           <Row className={styles.editorHd}>
-            <Col span={24}>
+            <Col span={20}>
               {/* FlowToolbar  */}
               <EditorToolbar />
             </Col>

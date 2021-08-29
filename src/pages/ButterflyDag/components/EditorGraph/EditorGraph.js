@@ -22,9 +22,6 @@ class EditorGraph extends Component {
   // 为每个算子添加source_table_name和target_table_name
   addSourceAndTarget = (sourceNode, targetNode, edge) => {
 
-
-    console.log("edge--------", edge);
-
     if (sourceNode.options.data == undefined) {
       // init data
       sourceNode.options.data = {};
@@ -34,13 +31,12 @@ class EditorGraph extends Component {
 
         sourceNode.options.data[option.name] = option.defaultValue;
       }
+    }
 
-      // 默认以node id为target_table_name
-      if (sourceNode.options.pluginName != 'sink')
-        sourceNode.options.data['target_table_name'] = sourceNode.id;
-      }
+    // 默认以node id为target_table_name
+    if (sourceNode.options.PluginType != 'sink')
+      sourceNode.options.data['target_table_name'] = sourceNode.id;
 
-      
     if (targetNode.options.data == undefined) {
       // init data
       targetNode.options.data = {};
@@ -50,48 +46,44 @@ class EditorGraph extends Component {
 
         targetNode.options.data[option.name] = option.defaultValue;
       }
-
-      // 默认以node id为target_table_name
-      if (targetNode.options.PluginType != 'sink')
-        targetNode.options.data['target_table_name'] = targetNode.id;
     }
 
-    // 当选择datajoin第二根线的时候
-      if (edge.targetEndpoint.id == 'DataJoin_join_result_table_name') {
+    // 默认以node id为source_table_name
+    if (targetNode.options.PluginType != 'source')
+      targetNode.options.data['source_table_name'] = sourceNode.id;
 
-        targetNode.options.data['join.source_table_name'] = sourceNode.id;
+    // 当选择datajoin第二根线的时候
+    if (edge.targetEndpoint.id == 'DataJoin_join_result_table_name') {
+
+      targetNode.options.data['join.source_table_name'] = sourceNode.id;
+    }
+
+    // pluginName为DataSelecter时, 特殊处理
+    if (sourceNode.options.pluginName == 'DataSelecter') {
+
+      // 当选择dataSelecter第一根线的时候
+      if (edge.sourceEndpoint.id == 'DataSelecter_t1_result_table_name') {
+
+        targetNode.options.data['source_table_name'] = sourceNode.id + 't1';
+
+        sourceNode.options.data['select.result_table_name'][0] = sourceNode.id+'_t1';
+
       }
 
-        // pluginName为DataSelecter时, 特殊处理
-        if(sourceNode.options.pluginName == 'DataSelecter') {
+      // 当选择dataSelecter第一根线的时候
+      if (edge.sourceEndpoint.id == 'DataSelecter_t2_result_table_name') {
 
-              // 当选择dataSelecter第一根线的时候
-            if (edge.sourceEndpoint.id == 'DataSelecter_t1_result_table_name') {
+        targetNode.options.data['source_table_name'] = sourceNode.id + 't2';
 
-              targetNode.options.data['source_table_name'] = sourceNode.id+'t1';
+        sourceNode.options.data['select.result_table_name'][1] = sourceNode.id+'_t2';
+      }
+    }
 
-              sourceNode.options.data['select.' + sourceNode.id+'t1' + '.where'] = sourceNode.options.data['select.t1.where'];
-
-
-              sourceNode.options.data['select.result_table_name'][0] = sourceNode.id+'t1';
-            }
-
-            // 当选择dataSelecter第一根线的时候
-            if (edge.sourceEndpoint.id == 'DataSelecter_t2_result_table_name') {
-
-              targetNode.options.data['source_table_name'] = sourceNode.id+'t2';
-
-              sourceNode.options.data['select.' + sourceNode.id+'t2' + '.where'] = sourceNode.options.data['select.t2.where'];
-
-              sourceNode.options.data['select.result_table_name'][1] = sourceNode.id+'t2';
-        }
-        }
-      
 
     console.log('sourceNode', sourceNode);
     console.log('targetNode', targetNode);
 
-    _.map(window.canvas.nodes, (d) => { if (d.id == sourceNode.id) d = sourceNode; if (d.id == targetNode.id) d = targetNode  });
+    _.map(window.canvas.nodes, (d) => { if (d.id == sourceNode.id) d = sourceNode; if (d.id == targetNode.id) d = targetNode });
 
 
 
@@ -107,7 +99,7 @@ class EditorGraph extends Component {
       disLinkable: true, // 可删除连线
       linkable: true,    // 可连线
       draggable: true,   // 可拖动
-      zoomable: true,    // 可放大
+      zoomable: false,    // 可放大
       moveable: true,    // 可平移
       theme: {
         edge: {
@@ -174,9 +166,9 @@ class EditorGraph extends Component {
             this.canvas.removeEdge(edgeId);
 
 
-          // 只有在pluginName不等于DataJoin的时候才触发
+            // 只有在pluginName不等于DataJoin的时候才触发
           } else if (_.filter(this.canvas.edges, (d) => { return d.targetEndpoint.nodeId == targetEndpoint.nodeId }).length > 1 && targetNode.options.pluginName != "DataJoin") {
-            
+
             this.openNotification("warning", "提示", "同一个算子下同一个连接点的输入, 不能有两个");
             this.canvas.removeEdge(edgeId);
           } else {
@@ -216,7 +208,6 @@ class EditorGraph extends Component {
         <div id="ParamsFrom">
           <ParamsFrom />
         </div>
-        <input />
       </div>
     );
   }

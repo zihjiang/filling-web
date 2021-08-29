@@ -35,56 +35,43 @@ class ParamsFrom extends Component {
 
     this.setState({
 
-      data: window.canvas.getNode(window.selectNode.id).data == undefined ? window.canvas.getNode(window.selectNode.id).options.data : window.canvas.getNode(window.selectNode.id).data,
+      // data: window.canvas.getNode(window.selectNode.id).data == undefined ? window.canvas.getNode(window.selectNode.id).options.data : window.canvas.getNode(window.selectNode.id).data,
+      data: window.selectNode.options.data,
       pluginName: window.selectNode.options.pluginName,
       pluginOptions: JSON.parse(window.selectNode.options.pluginOptions)
     });
+
+    // this._forceUpdate({1: 1});
   }
 
   // 更新node的数据
   updateData = (values) => {
 
-    _.map(window.canvas.nodes, (d) => { if (d.id == window.selectNode.id) d.options.data = values });
+    _.map(window.canvas.nodes, (d) => { if (d.id == window.selectNode.id) d.options.data = _.merge(d.options.data, values) });
   }
 
   _forceUpdate = (values) => {
 
-    // this.state.initialValues.map((item) => {
-
-    //   if(item.name == Object.keys(values)[0]) {
-    //     item.defaultValue = Object.values(values)[0];
-    //   }
-    // })
 
     let initialValues01 = this.state.initialValues;
     let pluginOptions01 = this.state.pluginOptions;
 
-    console.log('values', values);
-
-    console.log('values', Object.keys(values)[0]);
-    console.log('values', Object.values(values)[0]);
-
     initialValues01[Object.keys(values)[0]] = Object.values(values)[0];
-
-    console.log(initialValues01['select.result_table_name']);
-
 
     pluginOptions01.map((item) => {
 
-      if(item.name == Object.keys(values)[0]) {
+      if (item.name == Object.keys(values)[0]) {
         item.defaultValue = Object.values(values)[0];
       }
     })
-
-    console.log(pluginOptions01);
 
     this.setState({
       initialValues: initialValues01,
       pluginOptions: pluginOptions01
     })
 
-    
-    
+
+
   }
 
 
@@ -96,7 +83,19 @@ class ParamsFrom extends Component {
     if (pluginOptions) {
       if (this.state.data != undefined) {
         // 编辑
-        initialValues = data;
+        // initialValues = data;
+
+        
+
+        pluginOptions.forEach((pluginOption) => {
+          // if(pluginOption.type == "array") {
+          //   if(_.find(pluginOptions, (d) => {return d.father == pluginOption.father })) {
+              
+          //   }
+          // }
+          initialValues[pluginOption.name] = data[pluginOption.name];
+        })
+
         console.log('编辑');
       } else {
         // 新建
@@ -180,7 +179,7 @@ class ParamsFrom extends Component {
                   return <ProFormSelect
                     key={idx}
                     name={item.name}
-                    abel={item.text}
+                    label={item.text}
                     placeholder={item.paramsDesc}
                     style={{ display: item.display }}
                     disabled={item.readOnly}
@@ -192,27 +191,39 @@ class ParamsFrom extends Component {
                     key={idx}
                     mode="tags"
                     name={item.name}
-                    abel={item.text}
+                    label={item.text}
                     placeholder={item.paramsDesc}
                     style={{ display: item.display }}
-                    // disabled={item.readOnly}
+                    disabled={item.readOnly}
                     options={item.selectOptions}>
 
                   </ProFormSelect>
-                  
-                case "child":
-                  return (_.find(this.state.pluginOptions, (d) => { return d.name==item.father}) || []).defaultValue.map((_item, _idx) => {
-                    return  <ProFormText
-                      key={idx+_idx}
-                      name={item.name.replace("{}", _item)}
-                      abel={item.text}
-                      placeholder={item.paramsDesc.replace("{}", _item)}
+
+                case "text_rex_id":
+                    return <ProFormText
+                      key={idx}
+                      name={item.name.replace("{id}", window.selectNode.id)}
+                      label={item.text.replace("{id}", window.selectNode.id)}
+                      placeholder={item.paramsDesc.replace("{id}", window.selectNode.id)}
                       style={{ display: item.display }}
                       disabled={item.readOnly}
-                      onValuesChange={this._forceUpdate}
                       options={item.selectOptions}>
                     </ProFormText>
-                  })
+
+                case "child":
+                    return (_.find(this.state.pluginOptions, (d) => { return d.name == item.father }) || []).defaultValue.map((_item, _idx) => {
+                      return <ProFormText
+                        key={idx + _idx}
+                        name={item.name.replace("{field}", _item)}
+                        label={item.text.replace("{field}", _item)}
+                        placeholder={item.paramsDesc.replace("{field}", _item)}
+                        style={{ display: item.display }}
+                        disabled={item.readOnly}
+                        onClick={(d) => console.log(d)}
+                        options={item.selectOptions}>
+                      </ProFormText>
+                    })
+                
               }
             })
           }

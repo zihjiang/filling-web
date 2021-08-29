@@ -127,11 +127,15 @@ class panelPlugins {
 
   }
 
+  removeNode = () => {
+    this.imgData = [];
+    this.userImgData = [];
+    this.addCanvas = [];
+  }
+
 }
 
 let panelPluginsInstance = new panelPlugins();
 panelPluginsInstance.PanelNode = BaseNode;
-
-console.log(panelPluginsInstance);
 
 export { panelPluginsInstance };
