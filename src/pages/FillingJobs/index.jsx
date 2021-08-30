@@ -89,11 +89,10 @@ const TableList = () => {
 
   const columns = [
     {
-      title: '规则名称',
+      title: '任务名称',
       dataIndex: 'name',
-      tip: '规则名称是唯一的 key',
+      tip: '也是flink的任务名称',
       render: (dom, entity) => {
-        console.log(dom, entity);
         return (
           <a
             onClick={() => {
@@ -107,16 +106,8 @@ const TableList = () => {
       },
     },
     {
-      title: '描述',
-      dataIndex: 'desc',
-      valueType: 'textarea',
-    },
-    {
-      title: '服务调用次数',
-      dataIndex: 'callNo',
-      sorter: true,
-      hideInForm: true,
-      renderText: (val) => `${val}万`,
+      title: '任务类型',
+      dataIndex: 'type'
     },
     {
       title: '状态',
@@ -142,23 +133,15 @@ const TableList = () => {
       },
     },
     {
-      title: '上次调度时间',
+      title: '最后修改时间',
+      dataIndex: 'updatetime',
+      valueType: "dataTime"
+    },
+    {
+      title: 'description',
       sorter: true,
-      dataIndex: 'updatedAt',
-      valueType: 'dateTime',
-      renderFormItem: (item, { defaultRender, ...rest }, form) => {
-        const status = form.getFieldValue('status');
-
-        if (`${status}` === '0') {
-          return false;
-        }
-
-        if (`${status}` === '3') {
-          return <Input {...rest} placeholder="请输入异常原因！" />;
-        }
-
-        return defaultRender(item);
-      },
+      dataIndex: 'description',
+      valueType: 'textarea'
     },
     {
       title: '操作',

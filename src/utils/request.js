@@ -81,6 +81,8 @@
          console.log( parseInt((exp*1000 - nowTime)/1000) + '秒后第一个过期' )
          if( nowTime >= exp*1000 ){
              //只是过期了，那就去拿新的token
+
+             console.log("token 过期");
              if( ispending ){
                  //如果正在发送中，此请求就等一会吧，生成一个Promise 等新token返回的时候，我再resolve
              }else{

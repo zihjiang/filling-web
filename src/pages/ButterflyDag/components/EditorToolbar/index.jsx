@@ -62,6 +62,7 @@ class EditorToolbar extends Component {
     debugMode = () => {
         const data = window.canvas.getDataMap();
         console.log(this.deCodeDataMap(data));
+        console.log(JSON.stringify(this.deCodeDataMap(data)));
     }
 
     // 把canvas对象data换成能序列化的对象
