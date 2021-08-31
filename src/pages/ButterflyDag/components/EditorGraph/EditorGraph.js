@@ -80,9 +80,6 @@ class EditorGraph extends Component {
     }
 
 
-    console.log('sourceNode', sourceNode);
-    console.log('targetNode', targetNode);
-
     _.map(window.canvas.nodes, (d) => { if (d.id == sourceNode.id) d = sourceNode; if (d.id == targetNode.id) d = targetNode });
 
 
@@ -151,7 +148,6 @@ class EditorGraph extends Component {
 
           const targetEndpoint = edge.targetEndpoint;
 
-          console.log(targetNode.options);
           if (targetNode.options['PluginType'] == "source") {
             this.openNotification("warning", "提示", "任何情况下, 源都不准被允许放在箭头后面");
             this.canvas.removeEdge(edgeId);

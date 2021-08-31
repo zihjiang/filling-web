@@ -28,6 +28,9 @@
  const getUserToken = () => {
      return localStorage.getItem("id_token");
  }
+ const removeUserToken = () => {
+    localStorage.removeItem("id_token");
+}
  const errorHandler = error => {
    const { response } = error;
  
@@ -83,6 +86,7 @@
              //只是过期了，那就去拿新的token
 
              console.log("token 过期");
+             removeUserToken();
              if( ispending ){
                  //如果正在发送中，此请求就等一会吧，生成一个Promise 等新token返回的时候，我再resolve
              }else{

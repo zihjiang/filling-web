@@ -12,6 +12,7 @@ import {
 } from '@ant-design/icons';
 import React, { Component } from 'react';
 import './index.less';
+import { addFillingJobs, updateFillingJobs, patchFillingJobs } from '@/pages/FillingJobs/service';
 
 
 class EditorToolbar extends Component {
@@ -63,6 +64,12 @@ class EditorToolbar extends Component {
         const data = window.canvas.getDataMap();
         console.log(this.deCodeDataMap(data));
         console.log(JSON.stringify(this.deCodeDataMap(data)));
+    }
+
+    save = (entity) => {
+
+        const data = window.canvas.getDataMap();
+        console.log(entity);
     }
 
     // 把canvas对象data换成能序列化的对象
@@ -120,7 +127,7 @@ class EditorToolbar extends Component {
                 <ZoomInOutlined onClick={this.zoomIn} title="放大" />
                 <ZoomOutOutlined onClick={this.zoomInOut} title="缩小" />
                 <BugFilled title="调试" onClick={this.debugMode} />
-                <SaveFilled title="保存" onClick={this.debugMode}/>
+                <SaveFilled title="保存" onClick={this.save}/>
                 <CheckCircleFilled title="检查" />
                 <PlayCircleFilled title="启动" />
             </div>

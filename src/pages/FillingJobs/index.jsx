@@ -7,7 +7,7 @@ import { ModalForm, ProFormText, ProFormTextArea } from '@ant-design/pro-form';
 import ProDescriptions from '@ant-design/pro-descriptions';
 import UpdateForm from './components/UpdateForm';
 import { fillingJobs, addFillingJobs, updateFillingJobs, removeFillingJobs } from './service';
-
+import { Link } from 'react-router-dom'
 /**
  * 添加节点
  *
@@ -63,7 +63,7 @@ const handleRemove = async (selectedRows) => {
 
   try {
     await removeFillingJobs({
-      key: selectedRows.map((row) => row.key),
+      key: selectedRows.map((row) => row.id),
     });
     hide();
     message.success('删除成功，即将刷新');
@@ -74,6 +74,12 @@ const handleRemove = async (selectedRows) => {
     return false;
   }
 };
+
+const createFilling = (record) => {
+  this.props.history.push("/detail", {
+    dotData: record
+  });
+}
 
 const TableList = () => {
   /** 新建窗口的弹窗 */
@@ -94,14 +100,9 @@ const TableList = () => {
       tip: '也是flink的任务名称',
       render: (dom, entity) => {
         return (
-          <a
-            onClick={() => {
-              setCurrentRow(entity);
-              setShowDetail(true);
-            }}
-          >
+          <Link to={"/butterfly-dag/"+ entity.id} >
             {dom}
-          </a>
+          </Link>
         );
       },
     },
@@ -149,7 +150,7 @@ const TableList = () => {
       valueType: 'option',
       render: (_, record) => [
         <a
-          key="config"
+          key="id"
           onClick={() => {
             handleUpdateModalVisible(true);
             setCurrentRow(record);
@@ -157,7 +158,7 @@ const TableList = () => {
         >
           修改
         </a>,
-        <a key="subscribeAlert" href="https://procomponents.ant.design/">
+        <a key="id" href="https://procomponents.ant.design/">
           删除
         </a>,
       ],
@@ -168,7 +169,7 @@ const TableList = () => {
       <ProTable
         headerTitle="查询表格"
         actionRef={actionRef}
-        rowKey="key"
+        rowKey="id"
         search={{
           labelWidth: 120,
         }}
@@ -185,7 +186,6 @@ const TableList = () => {
         ]}
         request={fillingJobs}
         columns={columns}
-        postData={(data) => {console.log(data);return data}}
         rowSelection={{
           onChange: (_, selectedRows) => {
             setSelectedRows(selectedRows);

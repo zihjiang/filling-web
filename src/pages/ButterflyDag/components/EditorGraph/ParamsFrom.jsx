@@ -38,7 +38,7 @@ class ParamsFrom extends Component {
       // data: window.canvas.getNode(window.selectNode.id).data == undefined ? window.canvas.getNode(window.selectNode.id).options.data : window.canvas.getNode(window.selectNode.id).data,
       data: window.selectNode.options.data,
       pluginName: window.selectNode.options.pluginName,
-      pluginOptions: JSON.parse(window.selectNode.options.pluginOptions)
+      pluginOptions: window.selectNode.options.pluginOptions ? JSON.parse(window.selectNode.options.pluginOptions) : {}
     });
 
     // this._forceUpdate({1: 1});
@@ -80,32 +80,32 @@ class ParamsFrom extends Component {
     const pluginOptions = this.state.pluginOptions;
     let data = this.state.data;
 
-    if (pluginOptions) {
-      if (this.state.data != undefined) {
-        // 编辑
-        // initialValues = data;
+    // if (pluginOptions) {
+    if (this.state.data != undefined) {
+      // 编辑
+      initialValues = data;
 
-        
 
-        pluginOptions.forEach((pluginOption) => {
-          // if(pluginOption.type == "array") {
-          //   if(_.find(pluginOptions, (d) => {return d.father == pluginOption.father })) {
-              
-          //   }
-          // }
-          initialValues[pluginOption.name] = data[pluginOption.name];
-        })
 
-        console.log('编辑');
-      } else {
-        // 新建
-        pluginOptions.forEach((pluginOption) => {
-          initialValues[pluginOption.name] = pluginOption['defaultValue'];
-        })
+      // pluginOptions.forEach((pluginOption) => {
+      //   // if(pluginOption.type == "array") {
+      //   //   if(_.find(pluginOptions, (d) => {return d.father == pluginOption.father })) {
 
-        console.log('新建');
-      }
+      //   //   }
+      //   // }
+      //   initialValues[pluginOption.name] = data[pluginOption.name];
+      // })
+
+      console.log('编辑');
+    } else {
+      // 新建
+      pluginOptions.forEach((pluginOption) => {
+        initialValues[pluginOption.name] = pluginOption['defaultValue'];
+      })
+
+      console.log('新建');
     }
+    // }
 
     return (
       <>
@@ -200,30 +200,30 @@ class ParamsFrom extends Component {
                   </ProFormSelect>
 
                 case "text_rex_id":
-                    return <ProFormText
-                      key={idx}
-                      name={item.name.replace("{id}", window.selectNode.id)}
-                      label={item.text.replace("{id}", window.selectNode.id)}
-                      placeholder={item.paramsDesc.replace("{id}", window.selectNode.id)}
-                      style={{ display: item.display }}
-                      disabled={item.readOnly}
-                      options={item.selectOptions}>
-                    </ProFormText>
+                  return <ProFormText
+                    key={idx}
+                    name={item.name.replace("{id}", window.selectNode.id)}
+                    label={item.text.replace("{id}", window.selectNode.id)}
+                    placeholder={item.paramsDesc.replace("{id}", window.selectNode.id)}
+                    style={{ display: item.display }}
+                    disabled={item.readOnly}
+                    options={item.selectOptions}>
+                  </ProFormText>
 
                 case "child":
-                    return (_.find(this.state.pluginOptions, (d) => { return d.name == item.father }) || []).defaultValue.map((_item, _idx) => {
-                      return <ProFormText
-                        key={idx + _idx}
-                        name={item.name.replace("{field}", _item)}
-                        label={item.text.replace("{field}", _item)}
-                        placeholder={item.paramsDesc.replace("{field}", _item)}
-                        style={{ display: item.display }}
-                        disabled={item.readOnly}
-                        onClick={(d) => console.log(d)}
-                        options={item.selectOptions}>
-                      </ProFormText>
-                    })
-                
+                  return (_.find(this.state.pluginOptions, (d) => { return d.name == item.father }) || []).defaultValue.map((_item, _idx) => {
+                    return <ProFormText
+                      key={idx + _idx}
+                      name={item.name.replace("{field}", _item)}
+                      label={item.text.replace("{field}", _item)}
+                      placeholder={item.paramsDesc.replace("{field}", _item)}
+                      style={{ display: item.display }}
+                      disabled={item.readOnly}
+                      onClick={(d) => console.log(d)}
+                      options={item.selectOptions}>
+                    </ProFormText>
+                  })
+
               }
             })
           }
