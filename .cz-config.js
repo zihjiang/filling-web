@@ -3,19 +3,71 @@
 module.exports = {
 
   types: [
-    { value: 'WIP',         name : '🚧  WIP:            开发中' },
-    { value: 'feat',        name : '✨  feat:           一个新特性' },
-    { value: 'improvement', name : '➕  improvement:    对现有特性的提升' },
-    { value: 'fix',         name : '🐛  fix:            修复Bug' },
-    { value: 'refactor',    name : '🛠  refactor:       代码重构，注意和特性、重构区分开' },
-    { value: 'docs',        name : '📚  docs:           变更文档' },
-    { value: 'test',        name : '🏁  test:           修改或添加测试文件' },
-    { value: 'config',      name : '📝  config:         修改或添加配置文件' },
-    { value: 'style',       name : '💅  style:          修改格式，不影响功能，例如空格、代码格式等' },
-    { value: 'perf',        name : '📈  perf:           性能提升' },
-    { value: 'ci',          name : '🔧  ci:             修改ci相关配置、脚本等' },
-    { value: 'revert',      name : '⏪  revert:         回退版本' },
-    { value: 'chore',       name : '🗯  chore:          杂务，不属于以上类型，例如run build、引入或更新软件包等' },
+    {
+      value: ':construction: WIP',
+      name: '💪  WIP:      Work in progress'
+    },
+    {
+      value: ':sparkles: feat',
+      name: '✨  feat:     A new feature'
+    },
+    {
+      value: ':bug: fix',
+      name: '🐛  fix:      A bug fix'
+    },
+    {
+      value: ':hammer: refactor',
+      name: '🔨  refactor: A code change that neither fixes a bug nor adds a feature'
+    },
+    {
+      value: ':pencil: docs',
+      name: '📝  docs:     Documentation only changes'
+    },
+    {
+      value: ':white_check_mark: test',
+      name: '✅  test:     Add missing tests or correcting existing tests'
+    },
+    {
+      value: ':thought_balloon: chore',
+      name: '🗯  chore:    Changes that don\'t modify src or test files. Such as updating build tasks, package manager'
+    },
+    {
+      value: ':lipstick: ui',
+      name: '💄 Updating the UI and style files.',
+    },
+    {
+      value: ':art: style',
+      name:
+        '🎨 Changes that do not affect the meaning of the code (white-space, formatting, missing semi-colons, etc)',
+    },
+    {
+      value: 'revert',
+      name: '⏪  revert:   Revert to a commit'
+    },
+    {
+      value: ':package: dep_up',
+      name: '📦 Updating compiled files or packages.',
+    },
+    {
+      value: ':green_heart: fixci',
+      name: '💚 Fixing CI Build.',
+    },
+    {
+      value: ':truck: mv',
+      name: '🚚 Moving or renaming files.',
+    },
+    {
+      value: ':fire: prune',
+      name: '🔥 Removing code or files.',
+    },
+    {
+      value: ':bookmark: release',
+      name: '🔖 Releasing / Version tags.',
+    },
+    {
+      value: ':rocket: first release',
+      name: '🚀 first releast!',
+    }
   ],
 
   // scopes: [{ name: 'accounts' }, { name: 'admin' }, { name: 'exampleScope' }, { name: 'changeMe' }],
