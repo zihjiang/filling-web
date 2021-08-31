@@ -155,10 +155,10 @@ const TableList = () => {
             setCurrentRow(record);
           }}
         >
-          配置
+          修改
         </a>,
         <a key="subscribeAlert" href="https://procomponents.ant.design/">
-          订阅警报
+          删除
         </a>,
       ],
     },
