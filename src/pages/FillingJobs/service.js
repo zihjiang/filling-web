@@ -1,12 +1,12 @@
 // @ts-ignore
 
 /* eslint-disable */
-import request  from '@/utils/request';
+import request from '@/utils/request';
 
 /** 获取列表 GET /api/filling-jobs */
 
 export async function fillingJob(id, options) {
-  return request('/api/filling-jobs/' + id , {
+  return request('/api/filling-jobs/' + id, {
     method: 'GET',
     ...(options || {}),
   });
@@ -40,21 +40,19 @@ export async function addFillingJobs(options) {
 }
 /** 删除任务 DELETE /api/filling-jobs */
 
-export async function removeFillingJobs(options) {
-  return request('/api/filling-jobs', {
-    method: 'DELETE',
-    ...(options || {}),
+export async function removeFillingJobs(id) {
+  console.log(id);
+  return request('/api/filling-jobs/' + id, {
+    method: 'DELETE'
   });
 }
 
 /** 修改部分任务 PATCH /api/filling-jobs */
 
-export async function patchFillingJobs(options) {
-  return request('/api/filling-jobs', {
+export async function patchFillingJobs(id, options) {
+  options.data.id = id;
+  return request('/api/filling-jobs/' + id, {
     method: 'PATCH',
-    headers: {
-      'Content-Type': 'application/merge-patch+json',
-    },
-    ...(options || {}),
+    ...(options || {})
   });
 }

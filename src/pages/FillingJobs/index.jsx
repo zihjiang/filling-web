@@ -57,29 +57,24 @@ const handleUpdate = async (fields) => {
  * @param selectedRows
  */
 
-const handleRemove = async (selectedRows) => {
+const handleRemove = async (selectedRow) => {
   const hide = message.loading('正在删除');
-  if (!selectedRows) return true;
+  if (!selectedRow) return true;
 
   try {
-    await removeFillingJobs({
-      key: selectedRows.map((row) => row.id),
-    });
+
+    console.log(selectedRow);
+    await removeFillingJobs(selectedRow.id);
     hide();
     message.success('删除成功，即将刷新');
     return true;
   } catch (error) {
+    console.log(error);
     hide();
     message.error('删除失败，请重试');
     return false;
   }
 };
-
-const createFilling = (record) => {
-  this.props.history.push("/detail", {
-    dotData: record
-  });
-}
 
 const TableList = () => {
   /** 新建窗口的弹窗 */
@@ -158,7 +153,11 @@ const TableList = () => {
         >
           修改
         </a>,
-        <a key="id" href="https://procomponents.ant.design/">
+        <a key="id" onClick={() => {
+          handleRemove(record);
+          setSelectedRows([]);
+          actionRef.current?.reloadAndRest?.();
+        }}>
           删除
         </a>,
       ],

@@ -12,7 +12,6 @@ import { Spin } from 'antd';
 class EditorFlow extends Component {
   constructor(props) {
     super(props);
-
     this.state = {
       id: this.props.match.params.id,
       data: {}
@@ -54,7 +53,7 @@ class EditorFlow extends Component {
           <Row className={styles.editorHd}>
             <Col span={20}>
               {/* FlowToolbar  */}
-              <EditorToolbar />
+              <EditorToolbar data={this.state.data}/>
             </Col>
           </Row>
           <Row className={styles.editorBd}>
