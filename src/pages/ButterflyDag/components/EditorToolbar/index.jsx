@@ -15,13 +15,24 @@ import {
 } from '@ant-design/icons';
 import React, { Component } from 'react';
 import './index.less';
-import { message } from 'antd';
+import { Button, message } from 'antd';
+import ProForm, {
+    ModalForm,
+    ProFormText,
+    ProFormTextArea,
+    ProFormSelect,
+} from '@ant-design/pro-form';
+import { PlusOutlined } from '@ant-design/icons';
 import { addFillingJobs, updateFillingJobs, patchFillingJobs } from '@/pages/FillingJobs/service';
 
 
 class EditorToolbar extends Component {
     constructor(props) {
         super(props);
+        this.state = {
+            jobId: props.data.id,
+            data: props.data
+        }
 
         console.log(props);
     }
@@ -74,15 +85,25 @@ class EditorToolbar extends Component {
 
     save = async (entity) => {
 
-        message.loading('正在保存');
-        try {
-            const data = window.canvas.getDataMap();
+        const hide = message.loading('正在保存');
+        if (entity) {
+            // 修改基本信息
             console.log(entity);
+            delete entity.jobText;
+        } else {
+            // 只保存图表
+            const data = window.canvas.getDataMap();
             const jobText = JSON.stringify(this.deCodeDataMap(data));
-            await patchFillingJobs(3, { data: { jobText: jobText } });
-            message.loading('保存成功');
+            entity = { jobText };
+        }
+
+        try {
+            await patchFillingJobs(this.state.jobId, { data: entity });
+            hide();
+            message.success('保存成功');
             return true;
         } catch (error) {
+            hide();
             message.error('保存失败请重试！');
             return false;
         }
@@ -134,6 +155,61 @@ class EditorToolbar extends Component {
     }
 
     render() {
+        let initialValues = this.state.data;
+        const appEdit = (<>
+            <ModalForm
+                title="编辑基础信息"
+                trigger={
+                    <FormOutlined title="编辑基础信息" />
+                }
+                modalProps={{
+                    onCancel: () => console.log('run'),
+                }}
+                onFinish={async (values) => {
+                    await this.save(values);
+                    console.log(values.name);
+                    message.success('提交成功');
+                    return true;
+                }}
+                initialValues={initialValues}
+                width="40%"
+            >
+                <ProFormText
+                    width="xl"
+                    name="name"
+                    label="签约客户名称"
+                    tooltip="最长为 24 位"
+                    placeholder="请输入名称"
+                />
+
+                <ProFormText width="xl" name="contract" label="合同名称" placeholder="请输入名称" />
+                <ProFormSelect
+                    options={[
+                        {
+                            value: 'chapter',
+                            label: '盖章后生效',
+                        },
+                    ]}
+                    width="xl"
+                    name="useMode"
+                    label="合同约定生效方式"
+                />
+                <ProFormSelect
+                    width="xl"
+                    options={[
+                        {
+                            value: 'time',
+                            label: '履行完终止',
+                        },
+                    ]}
+                    name="unusedMode"
+                    label="合同约定失效效方式"
+                />
+                <ProFormTextArea width="xl" name="description" label="说明" />
+            </ModalForm>
+        </>);
+
+
         return (
             <div className="main">
                 <DeleteFilled onClick={this.deleteNodeAndEdge} title="删除" />
@@ -143,12 +219,12 @@ class EditorToolbar extends Component {
                 <ZoomInOutlined onClick={this.zoomIn} title="放大" />
                 <ZoomOutOutlined onClick={this.zoomInOut} title="缩小" />
                 <BugFilled title="调试" onClick={this.debugMode} />
-                <SaveFilled title="保存" onClick={this.save} />
+                <SaveFilled title="保存" onClick={() => this.save()} />
                 <CheckCircleFilled title="检查" />
                 <PlayCircleFilled title="启动" />
                 <DownloadOutlined title="下载" />
                 <SelectOutlined title="另存为" />
-                <FormOutlined title="编辑通用信息" />
+                {appEdit}
             </div>
         );
     }
