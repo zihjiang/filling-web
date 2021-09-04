@@ -64,6 +64,28 @@ const source = [
                 "readOnly": false,
                 "type": "textArea"
             }, {
+                "name": "format.type",
+                "text": "数据类型",
+                "defaultValue": "json",
+                "required": true,
+                "paramsDesc": "kafka消息的数据格式",
+                "desc": " ",
+
+                "readOnly": false,
+                "type": "select",
+                "selectOptions": [
+                    {
+                        "value": "json",
+                        "label": "json"
+                    }, {
+                        "value": "csv",
+                        "label": "csv"
+                    }, {
+                        "value": "text",
+                        "label": "text"
+                    }
+                ]
+            }, {
                 "name": "offset.reset",
                 "text": "消费模式",
                 "defaultValue": "earliest",
@@ -373,13 +395,13 @@ const source = [
         width: "100%"
     },
 ];
-const transfrom = [
+const transform = [
     {
         id: 'DataAggregates',
         text: '时间聚合',
         type: 'png',
         Data: {},
-        pluginType: 'transfrom',
+        pluginType: 'transform',
         pluginName: "DataAggregates",
         pluginOptions: [
             {
@@ -493,13 +515,13 @@ const transfrom = [
         text: 'Decode base64',
         type: 'png',
         Data: {},
-        pluginType: 'transfrom',
+        pluginType: 'transform',
         pluginName: "DecodeBase64",
         pluginOptions: [
             {
                 "name": "name",
                 "text": "名称",
-                "defaultValue": "DecodeBase64-transfrom",
+                "defaultValue": "DecodeBase64-transform",
                 "required": true,
                 "paramsDesc": "自定义名称, 显示用",
                 "desc": " ",
@@ -570,13 +592,13 @@ const transfrom = [
         text: 'Encode base64',
         type: 'png',
         Data: {},
-        pluginType: 'transfrom',
+        pluginType: 'transform',
         pluginName: "EncodeBase64",
         pluginOptions: [
             {
                 "name": "name",
                 "text": "名称",
-                "defaultValue": "EncodeBase64-transfrom",
+                "defaultValue": "EncodeBase64-transform",
                 "required": true,
                 "paramsDesc": "自定义名称, 显示用",
                 "desc": " ",
@@ -647,13 +669,13 @@ const transfrom = [
         text: 'DataJoin',
         type: 'png',
         Data: {},
-        pluginType: 'transfrom',
+        pluginType: 'transform',
         pluginName: "DataJoin",
         pluginOptions: [
             {
                 "name": "name",
                 "text": "名称",
-                "defaultValue": "DataJoin-transfrom",
+                "defaultValue": "DataJoin-transform",
                 "required": true,
                 "paramsDesc": "自定义名称, 显示用",
                 "desc": " ",
@@ -749,13 +771,13 @@ const transfrom = [
         text: 'DataSelecter',
         type: 'png',
         Data: {},
-        pluginType: 'transfrom',
+        pluginType: 'transform',
         pluginName: "DataSelecter",
         pluginOptions: [
             {
                 "name": "name",
                 "text": "名称",
-                "defaultValue": "DataSelecter-transfrom",
+                "defaultValue": "DataSelecter-transform",
                 "required": true,
                 "paramsDesc": "自定义名称, 显示用",
                 "desc": " ",
@@ -1098,5 +1120,5 @@ const sink = [
 
 ];
 
-const data = _.concat(source, transfrom, sink);
+const data = _.concat(source, transform, sink);
 export default data;

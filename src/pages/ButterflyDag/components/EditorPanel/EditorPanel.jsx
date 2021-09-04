@@ -70,7 +70,7 @@ class EditorPanel extends Component {
                         valueEnum={{
                             all: '全部',
                             source: '源',
-                            transfrom: '算子',
+                            transform: '算子',
                             sink: '目标'
                         }}
                         style={{

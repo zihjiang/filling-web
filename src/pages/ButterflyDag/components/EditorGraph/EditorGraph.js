@@ -33,9 +33,9 @@ class EditorGraph extends Component {
       }
     }
 
-    // 默认以node id为target_table_name
+    // 默认以node id为result_table_name
     if (sourceNode.options.PluginType != 'sink')
-      sourceNode.options.data['target_table_name'] = sourceNode.id;
+      sourceNode.options.data['result_table_name'] = this.generateTableName(sourceNode.id);
 
     if (targetNode.options.data == undefined) {
       // init data
@@ -50,12 +50,12 @@ class EditorGraph extends Component {
 
     // 默认以node id为source_table_name
     if (targetNode.options.PluginType != 'source')
-      targetNode.options.data['source_table_name'] = sourceNode.id;
+      targetNode.options.data['source_table_name'] = this.generateTableName(sourceNode.id);
 
     // 当选择datajoin第二根线的时候
     if (edge.targetEndpoint.id == 'DataJoin_join_result_table_name') {
 
-      targetNode.options.data['join.source_table_name'] = sourceNode.id;
+      targetNode.options.data['join.source_table_name'] = this.generateTableName(sourceNode.id);
     }
 
     // pluginName为DataSelecter时, 特殊处理
@@ -64,18 +64,18 @@ class EditorGraph extends Component {
       // 当选择dataSelecter第一根线的时候
       if (edge.sourceEndpoint.id == 'DataSelecter_t1_result_table_name') {
 
-        targetNode.options.data['source_table_name'] = sourceNode.id + 't1';
+        targetNode.options.data['source_table_name'] = this.generateTableName(sourceNode.id) + 't1';
 
-        sourceNode.options.data['select.result_table_name'][0] = sourceNode.id+'_t1';
+        sourceNode.options.data['select.result_table_name'][0] = this.generateTableName(sourceNode.id)+'_t1';
 
       }
 
       // 当选择dataSelecter第一根线的时候
       if (edge.sourceEndpoint.id == 'DataSelecter_t2_result_table_name') {
 
-        targetNode.options.data['source_table_name'] = sourceNode.id + 't2';
+        targetNode.options.data['source_table_name'] = this.generateTableName(sourceNode.id) + 't2';
 
-        sourceNode.options.data['select.result_table_name'][1] = sourceNode.id+'_t2';
+        sourceNode.options.data['select.result_table_name'][1] = this.generateTableName(sourceNode.id)+'_t2';
       }
     }
 
@@ -86,6 +86,12 @@ class EditorGraph extends Component {
 
     // _.map(window.canvas.nodes, (d) => { if (d.id == sourceNode.id) { d = sourceNode } if (d.id == targetNode.id) { d = targetNode } });
 
+  }
+
+  // 把- 替换成_
+  generateTableName = (nodeId) => {
+    
+    return nodeId.replaceAll('-', '_');
   }
   componentDidMount() {
     const data = this.props.data;

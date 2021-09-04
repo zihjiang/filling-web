@@ -24,7 +24,7 @@ class BaseNode extends Node {
       case 'source' :
         this.logEventDom = $('<div class="butterflie-circle-endpoint system-green-point"></div>');
         break;
-      case 'transfrom':
+      case 'transform':
         this.logEventDom = $('<div class="custom-green-rectangle-point system-green-point"></div>');
         break;
       case 'sink':
