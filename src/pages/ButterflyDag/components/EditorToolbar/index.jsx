@@ -13,7 +13,7 @@ import {
     SelectOutlined,
     FormOutlined
 } from '@ant-design/icons';
-import React, { Component } from 'react';
+import React, { Component, useState } from 'react';
 import './index.less';
 import { Button, message } from 'antd';
 import ProForm, {
@@ -24,6 +24,7 @@ import ProForm, {
 } from '@ant-design/pro-form';
 import { PlusOutlined } from '@ant-design/icons';
 import { addFillingJobs, updateFillingJobs, patchFillingJobs } from '@/pages/FillingJobs/service';
+import { history } from 'umi';
 
 
 class EditorToolbar extends Component {
@@ -33,8 +34,6 @@ class EditorToolbar extends Component {
             jobId: props.data.id,
             data: props.data
         }
-
-        console.log(props);
     }
 
     componentDidMount() {
@@ -84,7 +83,6 @@ class EditorToolbar extends Component {
     }
 
     save = async (entity) => {
-
         const hide = message.loading('正在保存');
         if (entity) {
             // 修改基本信息
@@ -96,9 +94,14 @@ class EditorToolbar extends Component {
             const jobText = JSON.stringify(this.deCodeDataMap(data));
             entity = { jobText };
         }
-
         try {
-            await patchFillingJobs(this.state.jobId, { data: entity });
+            if (this.state.jobId) {
+                await patchFillingJobs(this.state.jobId, { data: entity });
+            } else {
+                const job = await addFillingJobs({ data: entity });
+                this.state.jobId = job.id;
+                history.push('/butterfly-dag/' + job.id);
+            }
             hide();
             message.success('保存成功');
             return true;
@@ -167,7 +170,6 @@ class EditorToolbar extends Component {
                 }}
                 onFinish={async (values) => {
                     await this.save(values);
-                    console.log(values.name);
                     message.success('提交成功');
                     return true;
                 }}
@@ -177,34 +179,11 @@ class EditorToolbar extends Component {
                 <ProFormText
                     width="xl"
                     name="name"
-                    label="签约客户名称"
+                    label="任务名称"
                     tooltip="最长为 24 位"
                     placeholder="请输入名称"
                 />
 
-                <ProFormText width="xl" name="contract" label="合同名称" placeholder="请输入名称" />
-                <ProFormSelect
-                    options={[
-                        {
-                            value: 'chapter',
-                            label: '盖章后生效',
-                        },
-                    ]}
-                    width="xl"
-                    name="useMode"
-                    label="合同约定生效方式"
-                />
-                <ProFormSelect
-                    width="xl"
-                    options={[
-                        {
-                            value: 'time',
-                            label: '履行完终止',
-                        },
-                    ]}
-                    name="unusedMode"
-                    label="合同约定失效效方式"
-                />
                 <ProFormTextArea width="xl" name="description" label="说明" />
             </ModalForm>
         </>);

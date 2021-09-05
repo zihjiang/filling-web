@@ -55,7 +55,8 @@ export default [
   {
     name: '编辑任务',
     icon: 'smile',
-    path: '/butterfly-dag/:id',
+    path: '/butterfly-dag/:id?',
+    hideInMenu: true,
     component: './ButterflyDag',
   },
   {

@@ -106,6 +106,13 @@ request.interceptors.request.use(async (url, options) => {
             url: url,
             options: { ...options, headers: headers },
         });
+    } else if(location.pathname != '/user/login') {
+        console.log("登陆超时");
+        notification.error({
+            message: `登录超时, 请重新登陆`,
+            description: errorText,
+        });
+        location.href = "/user/login";
     }
     return ({
         url: url,
