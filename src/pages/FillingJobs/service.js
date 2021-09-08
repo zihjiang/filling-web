@@ -56,3 +56,13 @@ export async function patchFillingJobs(id, options) {
     ...(options || {})
   });
 }
+
+/** 启动一个任务 START /api/filling-jobs */
+
+export async function startFillingJobs(id) {
+  options.data.id = id;
+  return request('/api/filling-jobs/' + id + '/start', {
+    method: 'GET',
+    ...(options || {})
+  });
+}
