@@ -5,7 +5,7 @@ import DataAggregatesIcon from './images/DataAggregates.png';
 import enbase64Icon from './images/enbase64.png';
 import debase64Icon from './images/debase64.png';
 import dataJoinIcon from './images/dataJoin.png';
-import dataSelecterIcon from './images/dataSelecter.png';
+import dataSelectorIcon from './images/dataSelector.png';
 import devIcon from './images/dev.png';
 
 import BaseEndpoint from '../EditorGraph/endpoint';
@@ -767,17 +767,17 @@ const transform = [
         width: "100%"
     },
     {
-        id: 'dataSelecter',
-        text: 'DataSelecter',
+        id: 'dataSelector',
+        text: 'DataSelector',
         type: 'png',
         Data: {},
         pluginType: 'transform',
-        pluginName: "DataSelecter",
+        pluginName: "DataSelector",
         pluginOptions: [
             {
                 "name": "name",
                 "text": "名称",
-                "defaultValue": "DataSelecter-transform",
+                "defaultValue": "DataSelector-transform",
                 "required": true,
                 "paramsDesc": "自定义名称, 显示用",
                 "desc": " ",
@@ -787,7 +787,7 @@ const transform = [
             }, {
                 "name": "plugin_name",
                 "text": "插件名称",
-                "defaultValue": "DataSelecter",
+                "defaultValue": "DataSelector",
                 "required": true,
                 "paramsDesc": "插件名称, 系统自带, 无需更改",
                 "desc": " ",
@@ -837,25 +837,25 @@ const transform = [
             }
         ],
         endpoints: [{
-            id: 'DataSelecter_result_table_name',
+            id: 'DataSelector_result_table_name',
             orientation: [-1, 0],
             pos: [0, 0.5],
             Class: BaseEndpoint,
             color: 'system-green'
         },{
-            id: 'DataSelecter_t1_result_table_name',
+            id: 'DataSelector_t1_result_table_name',
             orientation: [1, 0],
             pos: [0, 0.5],
             Class: BaseEndpoint,
             color: 'system-green'
         }, {
-            id: 'DataSelecter_t2_result_table_name',
+            id: 'DataSelector_t2_result_table_name',
             orientation: [1, 0],
             pos: [0, 0.8],
             Class: BaseEndpoint,
             color: 'system-green'
         }],
-        content: dataSelecterIcon,
+        content: dataSelectorIcon,
         height: 90,
         width: "100%"
     }

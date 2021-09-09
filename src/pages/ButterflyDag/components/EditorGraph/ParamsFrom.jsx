@@ -199,9 +199,9 @@ class ParamsFrom extends Component {
                 case "text_rex_id":
                   return <ProFormText
                     key={idx}
-                    name={item.name.replace("{id}", window.selectNode.id)}
-                    label={item.text.replace("{id}", window.selectNode.id)}
-                    placeholder={item.paramsDesc.replace("{id}", window.selectNode.id)}
+                    name={item.name.replace("{id}", window.selectNode.id).replaceAll("-", "_")}
+                    label={item.text.replace("{id}", window.selectNode.id).replaceAll("-", "_")}
+                    placeholder={item.paramsDesc.replace("{id}", window.selectNode.id).replaceAll("-", "_")}
                     style={{ display: item.display }}
                     disabled={item.readOnly}
                     options={item.selectOptions}>

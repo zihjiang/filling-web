@@ -11,7 +11,8 @@ import {
     SaveFilled,
     DownloadOutlined,
     SelectOutlined,
-    FormOutlined
+    FormOutlined,
+    PauseCircleFilled
 } from '@ant-design/icons';
 import React, { Component, useState } from 'react';
 import './index.less';
@@ -32,8 +33,10 @@ class EditorToolbar extends Component {
         super(props);
         this.state = {
             jobId: props.data.id,
-            data: props.data
+            data: props.data,
+            status: (props.data.status == undefined) ? 1 : props.data.status
         }
+        console.log(props);
     }
 
     componentDidMount() {
@@ -109,6 +112,20 @@ class EditorToolbar extends Component {
             hide();
             message.error('保存失败请重试！');
             return false;
+        }
+    }
+
+    start = async () => {
+        if (this.state.jobId) {
+
+            this.setState(
+                {
+                    status: 2
+                }
+            );
+            console.log(this.state.status);
+        } else {
+            message.warning('请先保存');
         }
     }
 
@@ -188,7 +205,6 @@ class EditorToolbar extends Component {
             </ModalForm>
         </>);
 
-
         return (
             <div className="main">
                 <DeleteFilled onClick={this.deleteNodeAndEdge} title="删除" />
@@ -200,7 +216,10 @@ class EditorToolbar extends Component {
                 <BugFilled title="调试" onClick={this.debugMode} />
                 <SaveFilled title="保存" onClick={() => this.save()} />
                 <CheckCircleFilled title="检查" />
-                <PlayCircleFilled title="启动" />
+
+                <PlayCircleFilled title="启动" style={{ display: (this.state.status == 2) ? 'none' : '' }} onClick={() => this.start()} />
+                <PauseCircleFilled title="停止" style={{ display: (this.state.status != 2) ? 'none' : '' }} onClick={() => this.start()} />
+
                 <DownloadOutlined title="下载" />
                 <SelectOutlined title="另存为" />
                 {appEdit}

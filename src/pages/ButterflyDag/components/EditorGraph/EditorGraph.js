@@ -58,24 +58,24 @@ class EditorGraph extends Component {
       targetNode.options.data['join.source_table_name'] = this.generateTableName(sourceNode.id);
     }
 
-    // pluginName为DataSelecter时, 特殊处理
-    if (sourceNode.options.pluginName == 'DataSelecter') {
+    // pluginName为DataSelector时, 特殊处理
+    if (sourceNode.options.pluginName == 'DataSelector') {
 
-      // 当选择dataSelecter第一根线的时候
-      if (edge.sourceEndpoint.id == 'DataSelecter_t1_result_table_name') {
+      // 当选择DataSelector第一根线的时候
+      if (edge.sourceEndpoint.id == 'DataSelector_t1_result_table_name') {
 
-        targetNode.options.data['source_table_name'] = this.generateTableName(sourceNode.id) + 't1';
+        targetNode.options.data['source_table_name'] = this.generateTableName(sourceNode.id) + "_"  + 't1';
 
-        sourceNode.options.data['select.result_table_name'][0] = this.generateTableName(sourceNode.id)+'_t1';
+        sourceNode.options.data['select.result_table_name'][0] = this.generateTableName(sourceNode.id)  + '_t1';
 
       }
 
-      // 当选择dataSelecter第一根线的时候
-      if (edge.sourceEndpoint.id == 'DataSelecter_t2_result_table_name') {
+      // 当选择DataSelector第一根线的时候
+      if (edge.sourceEndpoint.id == 'DataSelector_t2_result_table_name') {
 
-        targetNode.options.data['source_table_name'] = this.generateTableName(sourceNode.id) + 't2';
+        targetNode.options.data['source_table_name'] = this.generateTableName(sourceNode.id) + "_" + 't2';
 
-        sourceNode.options.data['select.result_table_name'][1] = this.generateTableName(sourceNode.id)+'_t2';
+        sourceNode.options.data['select.result_table_name'][1] = this.generateTableName(sourceNode.id) + '_t2';
       }
     }
 
@@ -90,7 +90,7 @@ class EditorGraph extends Component {
 
   // 把- 替换成_
   generateTableName = (nodeId) => {
-    
+
     return nodeId.replaceAll('-', '_');
   }
   componentDidMount() {
