@@ -60,9 +60,15 @@ export async function patchFillingJobs(id, options) {
 /** 启动一个任务 START /api/filling-jobs */
 
 export async function startFillingJobs(id) {
-  options.data.id = id;
   return request('/api/filling-jobs/' + id + '/start', {
-    method: 'GET',
-    ...(options || {})
+    method: 'GET'
+  });
+}
+
+/** 停止一个任务 STOP /api/filling-jobs */
+
+export async function stopFillingJobs(id) {
+  return request('/api/filling-jobs/' + id + '/stop', {
+    method: 'GET'
   });
 }

@@ -110,22 +110,38 @@ const TableList = () => {
       dataIndex: 'status',
       hideInForm: true,
       valueEnum: {
-        0: {
-          text: '关闭',
-          status: 'Default',
-        },
         1: {
+          text: '未运行',
+          status: 'Created',
+        },
+        2: {
           text: '运行中',
           status: 'Processing',
         },
-        2: {
-          text: '已上线',
+        3: {
+          text: '完成',
           status: 'Success',
         },
-        3: {
-          text: '异常',
+        4: {
+          text: '失败',
           status: 'Error',
         },
+        5: {
+          text: '停止',
+          status: 'normal',
+        },
+        6: {
+          text: '失败',
+          status: 'Error',
+        },
+        7: {
+          text: '取消中',
+          status: 'Canceling',
+        },
+        8: {
+          text: '重启中',
+          status: 'Restarting',
+        }
       },
     },
     {

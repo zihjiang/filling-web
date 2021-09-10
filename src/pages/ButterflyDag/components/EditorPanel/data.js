@@ -7,6 +7,8 @@ import debase64Icon from './images/debase64.png';
 import dataJoinIcon from './images/dataJoin.png';
 import dataSelectorIcon from './images/dataSelector.png';
 import devIcon from './images/dev.png';
+import elasticsearchIcon from './images/Elasticsearch.png';
+import converIcon from './images/conver.png';
 
 import BaseEndpoint from '../EditorGraph/endpoint';
 
@@ -860,6 +862,100 @@ const transform = [
         width: "100%"
     }
 
+
+    ,
+    {
+        id: 'fieldTypeConver',
+        text: 'FieldTypeConver',
+        type: 'png',
+        Data: {},
+        pluginType: 'transform',
+        pluginName: "FieldTypeConver",
+        pluginOptions: [
+            {
+                "name": "name",
+                "text": "名称",
+                "defaultValue": "FieldTypeConver-transform",
+                "required": true,
+                "paramsDesc": "自定义名称, 显示用",
+                "desc": " ",
+
+                "readOnly": false,
+                "type": "text"
+            }, {
+                "name": "plugin_name",
+                "text": "插件名称",
+                "defaultValue": "FieldTypeConver",
+                "required": true,
+                "paramsDesc": "插件名称, 系统自带, 无需更改",
+                "desc": " ",
+                "display": "none",
+                "readOnly": true,
+                "type": "text"
+            },{
+                "name": "target_field_type",
+                "text": "目标字段类型",
+                "defaultValue": "int",
+                "required": true,
+                "paramsDesc": "目标字段类型",
+                "desc": " ",
+                "display": "none",
+                "readOnly": false,
+                "type": "select",
+                "selectOptions": [
+                    {
+                        "value": "int",
+                        "label": "int"
+                    }, {
+                        "value": "String",
+                        "label": "String"
+                    }, {
+                        "value": "Long",
+                        "label": "Long"
+                    }
+                ]
+            },{
+                "name": "source_field",
+                "text": "源字段名称",
+                "defaultValue": "",
+                "required": true,
+                "paramsDesc": "源字段名称",
+                "desc": " ",
+                "display": "none",
+                "readOnly": false,
+                "type": "array"
+            },
+            {
+                "name": "parallelism",
+                "text": "并行度",
+                "defaultValue": "1",
+                "required": false,
+                "paramsDesc": "flink并行度设置, 请谨慎设置",
+                "desc": " ",
+
+                "readOnly": false,
+                "type": "digit"
+            }
+        ],
+        endpoints: [
+        {
+            id: 'fieldTypeConver_result_table_name',
+            orientation: [1, 0],
+            pos: [0, 0.5],
+            Class: BaseEndpoint,
+            color: 'system-green'
+        }, {
+            id: 'fieldTypeConver_result_table_name',
+            orientation: [-1, 0],
+            pos: [0, 0.5],
+            Class: BaseEndpoint,
+            color: 'system-green'
+        }],
+        content: converIcon,
+        height: 90,
+        width: "100%"
+    }
+
 ];
 const sink = [
     {
@@ -914,17 +1010,17 @@ const sink = [
         width: "100%"
     },
     {
-        id: 'ConsoleSink',
-        text: 'ConsoleSink',
+        id: 'Elasticsearch',
+        text: 'Elasticsearch',
         type: 'png',
         Data: {},
         pluginType: 'sink',
-        pluginName: "ConsoleSink",
+        pluginName: "Elasticsearch",
         pluginOptions: [
             {
                 "name": "name",
                 "text": "名称",
-                "defaultValue": "Console-sink",
+                "defaultValue": "Elasticsearch-sink",
                 "required": true,
                 "paramsDesc": "自定义名称, 显示用",
                 "desc": " ",
@@ -934,7 +1030,7 @@ const sink = [
             }, {
                 "name": "plugin_name",
                 "text": "插件名称",
-                "defaultValue": "ConsoleSink",
+                "defaultValue": "Elasticsearch",
                 "required": true,
                 "paramsDesc": "插件名称, 系统自带, 无需更改",
                 "desc": " ",
@@ -951,53 +1047,91 @@ const sink = [
 
                 "readOnly": false,
                 "type": "digit"
-            }
-        ],
-        endpoints: [{
-            id: 'Console_source_table_name',
-            orientation: [-1, 0],
-            pos: [0, 0.5],
-            Class: BaseEndpoint,
-            color: 'system-green'
-        }],
-        content: devIcon,
-        height: 90,
-        width: "100%"
-    },
-    {
-        id: 'ConsoleSink',
-        text: 'ConsoleSink',
-        type: 'png',
-        Data: {},
-        pluginType: 'sink',
-        pluginName: "ConsoleSink",
-        pluginOptions: [
+            },
             {
-                "name": "name",
-                "text": "名称",
-                "defaultValue": "Console-sink",
+                "name": "hosts",
+                "text": "hosts",
+                "defaultValue": [],
                 "required": true,
-                "paramsDesc": "自定义名称, 显示用",
+                "paramsDesc": "es的host地址, 格式为host:端口, 例如: 10.11.12.1:9200",
+                "desc": " ",
+
+                "readOnly": false,
+                "type": "array"
+            },
+            {
+                "name": "index",
+                "text": "索引",
+                "defaultValue": "filling",
+                "required": true,
+                "paramsDesc": "es的索引名称",
                 "desc": " ",
 
                 "readOnly": false,
                 "type": "text"
-            }, {
-                "name": "plugin_name",
-                "text": "插件名称",
-                "defaultValue": "ConsoleSink",
+            },
+            {
+                "name": "es.bulk.flush.max.actions",
+                "text": "刷新前要缓冲的最大文档数",
+                "defaultValue": 1000,
                 "required": true,
-                "paramsDesc": "插件名称, 系统自带, 无需更改",
+                "paramsDesc": "刷新前要缓冲的最大文档数",
                 "desc": " ",
-                "display": "none",
-                "readOnly": true,
-                "type": "text"
-            },{
-                "name": "parallelism",
-                "text": "并行度",
-                "defaultValue": "1",
+
+                "readOnly": false,
+                "type": "digit"
+            },
+            {
+                "name": "es.bulk.flush.max.size.mb",
+                "text": "刷新前要缓冲的最大数据大小( 单位是M)",
+                "defaultValue": 2,
                 "required": true,
-                "paramsDesc": "flink并行度设置, 请谨慎设置",
+                "paramsDesc": "刷新前要缓冲的最大文档数",
+                "desc": " ",
+
+                "readOnly": false,
+                "type": "digit"
+            },
+            {
+                "name": "es.bulk.flush.interval.ms",
+                "text": "刷新的时间间隔",
+                "defaultValue": 1000,
+                "required": true,
+                "paramsDesc": "无论缓冲操作的数量或大小如何，刷新的时间间隔。",
+                "desc": " ",
+
+                "readOnly": false,
+                "type": "digit"
+            },
+            {
+                "name": "es.bulk.flush.backoff.enable",
+                "text": "背压",
+                "defaultValue": "true",
+                "required": true,
+                "paramsDesc": "背压",
+                "desc": " ",
+
+                "readOnly": false,
+                "type": "text"
+            },
+            {
+                "name": "es.bulk.flush.backoff.delay",
+                "text": "背压延迟",
+                "defaultValue": 50,
+                "required": true,
+                "paramsDesc": "背压延迟",
+                "desc": " ",
+
+                "readOnly": false,
+                "type": "digit"
+            }
+            ,
+            {
+                "name": "es.bulk.flush.backoff.retries",
+                "text": "背压重试最大次数",
+                "defaultValue": "8",
+                "required": true,
+                "paramsDesc": "背压重试最大次数",
                 "desc": " ",
 
                 "readOnly": false,
@@ -1005,115 +1139,13 @@ const sink = [
             }
         ],
         endpoints: [{
-            id: 'Console_source_table_name',
+            id: 'elasticsearch_source_table_name',
             orientation: [-1, 0],
             pos: [0, 0.5],
             Class: BaseEndpoint,
             color: 'system-green'
         }],
-        content: devIcon,
-        height: 90,
-        width: "100%"
-    },
-    {
-        id: 'ConsoleSink',
-        text: 'ConsoleSink',
-        type: 'png',
-        Data: {},
-        pluginType: 'sink',
-        pluginName: "ConsoleSink",
-        pluginOptions: [
-            {
-                "name": "name",
-                "text": "名称",
-                "defaultValue": "Console-sink",
-                "required": true,
-                "paramsDesc": "自定义名称, 显示用",
-                "desc": " ",
-
-                "readOnly": false,
-                "type": "text"
-            }, {
-                "name": "plugin_name",
-                "text": "插件名称",
-                "defaultValue": "ConsoleSink",
-                "required": true,
-                "paramsDesc": "插件名称, 系统自带, 无需更改",
-                "desc": " ",
-                "display": "none",
-                "readOnly": true,
-                "type": "text"
-            },{
-                "name": "parallelism",
-                "text": "并行度",
-                "defaultValue": "1",
-                "required": true,
-                "paramsDesc": "flink并行度设置, 请谨慎设置",
-                "desc": " ",
-
-                "readOnly": false,
-                "type": "digit"
-            }
-        ],
-        endpoints: [{
-            id: 'Console_source_table_name',
-            orientation: [-1, 0],
-            pos: [0, 0.5],
-            Class: BaseEndpoint,
-            color: 'system-green'
-        }],
-        content: devIcon,
-        height: 90,
-        width: "100%"
-    },
-    {
-        id: 'ConsoleSink',
-        text: 'ConsoleSink',
-        type: 'png',
-        Data: {},
-        pluginType: 'sink',
-        pluginName: "ConsoleSink",
-        pluginOptions: [
-            {
-                "name": "name",
-                "text": "名称",
-                "defaultValue": "Console-sink",
-                "required": true,
-                "paramsDesc": "自定义名称, 显示用",
-                "desc": " ",
-
-                "readOnly": false,
-                "type": "text"
-            }, {
-                "name": "plugin_name",
-                "text": "插件名称",
-                "defaultValue": "ConsoleSink",
-                "required": true,
-                "paramsDesc": "插件名称, 系统自带, 无需更改",
-                "desc": " ",
-                "display": "none",
-                "readOnly": true,
-                "type": "text"
-            },{
-                "name": "parallelism",
-                "text": "并行度",
-                "defaultValue": "1",
-                "required": true,
-                "paramsDesc": "flink并行度设置, 请谨慎设置",
-                "desc": " ",
-
-                "readOnly": false,
-                "type": "digit"
-            }
-        ],
-        endpoints: [{
-            id: 'Console_source_table_name',
-            orientation: [-1, 0],
-            pos: [0, 0.5],
-            Class: BaseEndpoint,
-            color: 'system-green'
-        }],
-        content: devIcon,
+        content: elasticsearchIcon,
         height: 90,
         width: "100%"
     }

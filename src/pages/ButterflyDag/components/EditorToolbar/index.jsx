@@ -24,7 +24,7 @@ import ProForm, {
     ProFormSelect,
 } from '@ant-design/pro-form';
 import { PlusOutlined } from '@ant-design/icons';
-import { addFillingJobs, updateFillingJobs, patchFillingJobs } from '@/pages/FillingJobs/service';
+import { startFillingJobs, stopFillingJobs, addFillingJobs, updateFillingJobs, patchFillingJobs } from '@/pages/FillingJobs/service';
 import { history } from 'umi';
 
 
@@ -117,13 +117,31 @@ class EditorToolbar extends Component {
 
     start = async () => {
         if (this.state.jobId) {
-
+            const hide = message.loading('启动中');
+            const job = await startFillingJobs(this.state.jobId);
             this.setState(
                 {
-                    status: 2
+                    status: job.status
                 }
             );
-            console.log(this.state.status);
+            hide();
+            message.success('保存成功');
+        } else {
+            message.warning('请先保存');
+        }
+    }
+
+    stop = async () => {
+        if (this.state.jobId) {
+            const hide = message.loading('停止中');
+            const job = await stopFillingJobs(this.state.jobId);
+            this.setState(
+                {
+                    status: job.status
+                }
+            );
+            hide();
+            message.success('停止成功');
         } else {
             message.warning('请先保存');
         }
@@ -218,7 +236,7 @@ class EditorToolbar extends Component {
                 <CheckCircleFilled title="检查" />
 
                 <PlayCircleFilled title="启动" style={{ display: (this.state.status == 2) ? 'none' : '' }} onClick={() => this.start()} />
-                <PauseCircleFilled title="停止" style={{ display: (this.state.status != 2) ? 'none' : '' }} onClick={() => this.start()} />
+                <PauseCircleFilled title="停止" style={{ display: (this.state.status != 2) ? 'none' : '' }} onClick={() => this.stop()} />
 
                 <DownloadOutlined title="下载" />
                 <SelectOutlined title="另存为" />
