@@ -9,6 +9,9 @@ import dataSelectorIcon from './images/dataSelector.png';
 import devIcon from './images/dev.png';
 import elasticsearchIcon from './images/Elasticsearch.png';
 import converIcon from './images/conver.png';
+import fieldIcon from './images/field.png';
+import sqlIcon from './images/sql.png';
+import selectIocn from './images/selected.png';
 
 import BaseEndpoint from '../EditorGraph/endpoint';
 
@@ -860,10 +863,7 @@ const transform = [
         content: dataSelectorIcon,
         height: 90,
         width: "100%"
-    }
-
-
-    ,
+    },
     {
         id: 'fieldTypeConver',
         text: 'FieldTypeConver',
@@ -939,7 +939,7 @@ const transform = [
         ],
         endpoints: [
         {
-            id: 'fieldTypeConver_result_table_name',
+            id: 'fieldTypeConver_source_table_name',
             orientation: [1, 0],
             pos: [0, 0.5],
             Class: BaseEndpoint,
@@ -952,6 +952,223 @@ const transform = [
             color: 'system-green'
         }],
         content: converIcon,
+        height: 90,
+        width: "100%"
+    },
+    {
+        id: 'FieldOperation',
+        text: 'FieldOperation',
+        type: 'png',
+        Data: {},
+        pluginType: 'transform',
+        pluginName: "FieldOperation",
+        pluginOptions: [
+            {
+                "name": "name",
+                "text": "名称",
+                "defaultValue": "FieldOperation-transform",
+                "required": true,
+                "paramsDesc": "自定义名称, 显示用",
+                "desc": " ",
+
+                "readOnly": false,
+                "type": "text"
+            }, {
+                "name": "plugin_name",
+                "text": "插件名称",
+                "defaultValue": "FieldOperation",
+                "required": true,
+                "paramsDesc": "插件名称, 系统自带, 无需更改",
+                "desc": " ",
+                "display": "none",
+                "readOnly": true,
+                "type": "text"
+            },{
+                "name": "target_field",
+                "text": "目标字段",
+                "defaultValue": "",
+                "required": true,
+                "paramsDesc": "目标字段",
+                "desc": " ",
+                "display": "none",
+                "readOnly": false,
+                "type": "text"
+            },{
+                "name": "script",
+                "text": "表达式(支持sql函数)",
+                "defaultValue": "",
+                "required": true,
+                "paramsDesc": "表达式(支持sql函数)",
+                "desc": " ",
+                "display": "none",
+                "readOnly": false,
+                "type": "text"
+            },
+            {
+                "name": "parallelism",
+                "text": "并行度",
+                "defaultValue": "1",
+                "required": false,
+                "paramsDesc": "flink并行度设置, 请谨慎设置",
+                "desc": " ",
+
+                "readOnly": false,
+                "type": "digit"
+            }
+        ],
+        endpoints: [
+        {
+            id: 'fieldOperation_source_table_name',
+            orientation: [1, 0],
+            pos: [0, 0.5],
+            Class: BaseEndpoint,
+            color: 'system-green'
+        }, {
+            id: 'fieldOperation_result_table_name',
+            orientation: [-1, 0],
+            pos: [0, 0.5],
+            Class: BaseEndpoint,
+            color: 'system-green'
+        }],
+        content: fieldIcon,
+        height: 90,
+        width: "100%"
+    },
+    {
+        id: 'Sql',
+        text: 'Sql',
+        type: 'png',
+        Data: {},
+        pluginType: 'transform',
+        pluginName: "Sql",
+        pluginOptions: [
+            {
+                "name": "name",
+                "text": "名称",
+                "defaultValue": "Sql-transform",
+                "required": true,
+                "paramsDesc": "自定义名称, 显示用",
+                "desc": " ",
+
+                "readOnly": false,
+                "type": "text"
+            }, {
+                "name": "plugin_name",
+                "text": "插件名称",
+                "defaultValue": "Sql",
+                "required": true,
+                "paramsDesc": "插件名称, 系统自带, 无需更改",
+                "desc": " ",
+                "display": "none",
+                "readOnly": true,
+                "type": "text"
+            },{
+                "name": "sql",
+                "text": "sql语句(用{source_table_name}表示上个算子的表名) ",
+                "defaultValue": "select * from {source_table_name}",
+                "required": true,
+                "paramsDesc": "sql语句(用{source_table_name}表示上个算子的表名)",
+                "desc": " ",
+                "display": "none",
+                "readOnly": false,
+                "type": "text"
+            },
+            {
+                "name": "parallelism",
+                "text": "并行度",
+                "defaultValue": "1",
+                "required": false,
+                "paramsDesc": "flink并行度设置, 请谨慎设置",
+                "desc": " ",
+
+                "readOnly": false,
+                "type": "digit"
+            }
+        ],
+        endpoints: [
+        {
+            id: 'sql_source_table_name',
+            orientation: [1, 0],
+            pos: [0, 0.5],
+            Class: BaseEndpoint,
+            color: 'system-green'
+        }, {
+            id: 'sql_result_table_name',
+            orientation: [-1, 0],
+            pos: [0, 0.5],
+            Class: BaseEndpoint,
+            color: 'system-green'
+        }],
+        content: sqlIcon,
+        height: 90,
+        width: "100%"
+    },
+    {
+        id: 'FieldSelect',
+        text: 'FieldSelect',
+        type: 'png',
+        Data: {},
+        pluginType: 'transform',
+        pluginName: "FieldSelect",
+        pluginOptions: [
+            {
+                "name": "name",
+                "text": "名称",
+                "defaultValue": "FieldSelect-transform",
+                "required": true,
+                "paramsDesc": "自定义名称, 显示用",
+                "desc": " ",
+
+                "readOnly": false,
+                "type": "text"
+            }, {
+                "name": "plugin_name",
+                "text": "插件名称",
+                "defaultValue": "FieldSelect",
+                "required": true,
+                "paramsDesc": "插件名称, 系统自带, 无需更改",
+                "desc": " ",
+                "display": "none",
+                "readOnly": true,
+                "type": "text"
+            },{
+                "name": "field",
+                "text": "需要保留的字段",
+                "defaultValue": [],
+                "required": true,
+                "paramsDesc": "需要保留的字段, 回车选择",
+                "desc": " ",
+                "display": "none",
+                "readOnly": false,
+                "type": "array"
+            },
+            {
+                "name": "parallelism",
+                "text": "并行度",
+                "defaultValue": "1",
+                "required": false,
+                "paramsDesc": "flink并行度设置, 请谨慎设置",
+                "desc": " ",
+
+                "readOnly": false,
+                "type": "digit"
+            }
+        ],
+        endpoints: [
+        {
+            id: 'fieldSelect_source_table_name',
+            orientation: [1, 0],
+            pos: [0, 0.5],
+            Class: BaseEndpoint,
+            color: 'system-green'
+        }, {
+            id: 'fieldSelect_result_table_name',
+            orientation: [-1, 0],
+            pos: [0, 0.5],
+            Class: BaseEndpoint,
+            color: 'system-green'
+        }],
+        content: selectIocn,
         height: 90,
         width: "100%"
     }

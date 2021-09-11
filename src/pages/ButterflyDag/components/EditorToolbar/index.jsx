@@ -119,13 +119,23 @@ class EditorToolbar extends Component {
         if (this.state.jobId) {
             const hide = message.loading('启动中');
             const job = await startFillingJobs(this.state.jobId);
+            console.log("job", job.status);
+            switch (job.status) {
+                case "2":
+                    hide();
+                    message.success('启动成功');
+                    break;
+                default:
+                    hide();
+                    message.error('启动失败, 请查看flink端日志');
+                    break;
+            };
+
             this.setState(
                 {
                     status: job.status
                 }
             );
-            hide();
-            message.success('保存成功');
         } else {
             message.warning('请先保存');
         }

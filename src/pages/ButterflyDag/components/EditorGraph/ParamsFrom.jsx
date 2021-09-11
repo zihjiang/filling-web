@@ -12,6 +12,7 @@ import {
 } from '@ant-design/pro-form';
 import { PlusOutlined } from '@ant-design/icons';
 import _ from 'lodash';
+import MonacoEditor from 'react-monaco-editor';
 
 class ParamsFrom extends Component {
   constructor(props) {
@@ -22,19 +23,21 @@ class ParamsFrom extends Component {
       data: {},
       pluginName: "",
       pluginOptions: [],
-      initialValues: {}
+      initialValues: {},
+      editModel: 'json'
     }
 
   }
 
   componentDidMount() {
+    this.setState({
+      editModel: 'json'
+    })
   }
 
   handleUpdate = () => {
 
-
     this.setState({
-
       // data: window.canvas.getNode(window.selectNode.id).data == undefined ? window.canvas.getNode(window.selectNode.id).options.data : window.canvas.getNode(window.selectNode.id).data,
       data: window.selectNode.options.data,
       pluginName: window.selectNode.options.pluginName,
@@ -43,7 +46,6 @@ class ParamsFrom extends Component {
 
     // this._forceUpdate({1: 1});
   }
-
   // 更新node的数据
   updateData = (values) => {
 
@@ -72,6 +74,16 @@ class ParamsFrom extends Component {
 
 
 
+  }
+
+  changeType = (value) => {
+
+    console.log(value);
+    this.setState(
+      {
+        editModel: value
+      }
+    )
   }
 
 
@@ -104,6 +116,101 @@ class ParamsFrom extends Component {
     }
     // }
 
+    let Universal = (type) => (
+      this.state.pluginOptions.map((item, idx) => {
+        switch (item.type) {
+          case "text":
+            return <ProFormText
+              key={idx}
+              name={item.name}
+              label={item.text}
+              placeholder={item.paramsDesc}
+              style={{ display: item.display }}
+              disabled={item.readOnly}
+              formItemProps={
+                {
+                  rules: [
+                    {
+                      required: item.required,
+                      message: `${item.text}是必须的`,
+                    },
+                  ],
+                }
+              }
+            />
+          case "textArea":
+            return <ProFormTextArea
+              key={idx}
+              name={item.name}
+              label={item.text}
+              placeholder={item.paramsDesc}
+              style={{ display: item.display }}
+              disabled={item.readOnly}
+            />
+          case "digit":
+            return <ProFormDigit
+              key={idx}
+              name={item.name}
+              label={item.text}
+              placeholder={item.paramsDesc}
+              style={{ display: item.display }}
+              min={item.digitMin}
+              max={item.digitMax}
+              disabled={item.readOnly}
+            />
+
+          case "select":
+            return <ProFormSelect
+              key={idx}
+              name={item.name}
+              label={item.text}
+              placeholder={item.paramsDesc}
+              style={{ display: item.display }}
+              disabled={item.readOnly}
+              options={item.selectOptions}>
+            </ProFormSelect>
+
+          case "array":
+            return <ProFormSelect
+              key={idx}
+              mode="tags"
+              name={item.name}
+              label={item.text}
+              placeholder={item.paramsDesc}
+              style={{ display: item.display }}
+              disabled={item.readOnly}
+              options={item.selectOptions}>
+
+            </ProFormSelect>
+
+          case "text_rex_id":
+            return <ProFormText
+              key={idx}
+              name={item.name.replace("{id}", window.selectNode.id).replaceAll("-", "_")}
+              label={item.text.replace("{id}", window.selectNode.id).replaceAll("-", "_")}
+              placeholder={item.paramsDesc.replace("{id}", window.selectNode.id).replaceAll("-", "_")}
+              style={{ display: item.display }}
+              disabled={item.readOnly}
+              options={item.selectOptions}>
+            </ProFormText>
+
+          case "child":
+            return (_.find(this.state.pluginOptions, (d) => { return d.name == item.father }) || []).defaultValue.map((_item, _idx) => {
+              return <ProFormText
+                key={idx + _idx}
+                name={item.name.replace("{field}", _item)}
+                label={item.text.replace("{field}", _item)}
+                placeholder={item.paramsDesc.replace("{field}", _item)}
+                style={{ display: item.display }}
+                disabled={item.readOnly}
+                onClick={(d) => console.log(d)}
+                options={item.selectOptions}>
+              </ProFormText>
+            })
+
+        }
+      })
+    );
     return (
       <>
         <DrawerForm
@@ -129,101 +236,22 @@ class ParamsFrom extends Component {
           onValuesChange={(value) => this._forceUpdate(value)}
         >
 
-          {
-            this.state.pluginOptions.map((item, idx) => {
-              switch (item.type) {
-                case "text":
-                  return <ProFormText
-                    key={idx}
-                    name={item.name}
-                    label={item.text}
-                    placeholder={item.paramsDesc}
-                    style={{ display: item.display }}
-                    disabled={item.readOnly}
-                    formItemProps={
-                      {
-                        rules: [
-                          {
-                            required: item.required,
-                            message: `${item.text}是必须的`,
-                          },
-                        ],
-                      }
-                    }
-                  />
-                case "textArea":
-                  return <ProFormTextArea
-                    key={idx}
-                    name={item.name}
-                    label={item.text}
-                    placeholder={item.paramsDesc}
-                    style={{ display: item.display }}
-                    disabled={item.readOnly}
-                  />
-                case "digit":
-                  return <ProFormDigit
-                    key={idx}
-                    name={item.name}
-                    label={item.text}
-                    placeholder={item.paramsDesc}
-                    style={{ display: item.display }}
-                    min={item.digitMin}
-                    max={item.digitMax}
-                    disabled={item.readOnly}
-                  />
-
-                case "select":
-                  return <ProFormSelect
-                    key={idx}
-                    name={item.name}
-                    label={item.text}
-                    placeholder={item.paramsDesc}
-                    style={{ display: item.display }}
-                    disabled={item.readOnly}
-                    options={item.selectOptions}>
-                  </ProFormSelect>
-
-                case "array":
-                  return <ProFormSelect
-                    key={idx}
-                    mode="tags"
-                    name={item.name}
-                    label={item.text}
-                    placeholder={item.paramsDesc}
-                    style={{ display: item.display }}
-                    disabled={item.readOnly}
-                    options={item.selectOptions}>
-
-                  </ProFormSelect>
-
-                case "text_rex_id":
-                  return <ProFormText
-                    key={idx}
-                    name={item.name.replace("{id}", window.selectNode.id).replaceAll("-", "_")}
-                    label={item.text.replace("{id}", window.selectNode.id).replaceAll("-", "_")}
-                    placeholder={item.paramsDesc.replace("{id}", window.selectNode.id).replaceAll("-", "_")}
-                    style={{ display: item.display }}
-                    disabled={item.readOnly}
-                    options={item.selectOptions}>
-                  </ProFormText>
-
-                case "child":
-                  return (_.find(this.state.pluginOptions, (d) => { return d.name == item.father }) || []).defaultValue.map((_item, _idx) => {
-                    return <ProFormText
-                      key={idx + _idx}
-                      name={item.name.replace("{field}", _item)}
-                      label={item.text.replace("{field}", _item)}
-                      placeholder={item.paramsDesc.replace("{field}", _item)}
-                      style={{ display: item.display }}
-                      disabled={item.readOnly}
-                      onClick={(d) => console.log(d)}
-                      options={item.selectOptions}>
-                    </ProFormText>
-                  })
-
-              }
-            })
-          }
+          {/* <ProFormRadio.Group
+            style={{
+              margin: 16,
+            }}
+            radioType="button"
+            fieldProps={{
+              value: this.state.editModel,
+              onChange: (e) => this.changeType(e.target.value),
+            }}
+            options={[
+              '配置',
+              'json'
+              
+            ]}
+          /> */}
+          {Universal(1)}
         </DrawerForm>
       </>
     );
